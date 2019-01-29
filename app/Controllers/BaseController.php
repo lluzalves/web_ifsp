@@ -30,13 +30,17 @@ abstract class BaseController
         return $api_request;
     }
 
-    public function requestPostWithBody($path, $body)
+    public function requestPostWithParams($path, $body)
     {
         $client = new Client();
         $api_response = $client->post(
             $this->api_address . $path, [
             'form_params' => $body
         ]);
+
+        // var_dump($api_response->getBody()->getContents());
+
+        return $api_response->getBody()->getContents();
 
     }
 }

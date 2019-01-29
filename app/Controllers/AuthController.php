@@ -26,7 +26,7 @@ class AuthController extends BaseController
             'password' => $request->getParam('password')
         );
         $path = "/register";
-        $result = $this->requestPostWithBody($path, $body);
+        $result = $this->requestPostWithParams($path, $body);
 
     }
 
