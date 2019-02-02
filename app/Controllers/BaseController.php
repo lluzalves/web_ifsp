@@ -12,12 +12,14 @@ abstract class BaseController
     protected $container;
     protected $view;
     protected $client;
+    protected $router;
     protected $api_address = 'http://192.168.0.15/slim_app/public';
 
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
         $this->view = $container->view;
+        $this->router = $container->router;
         $this->client = new Client();
     }
 

@@ -26,8 +26,12 @@ class AuthController extends BaseController
             'password' => $request->getParam('password')
         );
         $path = "/register";
-        $result = $this->requestPostWithParams($path, $body);
-
+        $result = json_decode($this->requestPostWithParams($path, $body));
+        if($result->code == 200){
+            return $response->withRedirect($this->router->pathFor('login'));
+        }else{
+            return $response->withRedirect($this->router->pathFor('auth.signup'));
+        }
     }
 
 
