@@ -17,6 +17,7 @@ abstract class BaseController
     protected $client;
     protected $router;
     protected $validator;
+    protected $api_response;
     protected $api_address = 'http://192.168.0.15/slim_app/public';
 
     public function __construct(ContainerInterface $container)
@@ -37,23 +38,44 @@ abstract class BaseController
         return $api_request;
     }
 
-    public function requestPostWithParams($path, $body)
+    public function basicAuthRequest($body)
     {
-        $client = new Client();
+
+        $credentials = base64_encode($body['email'].':'.$body['password']);
         try {
-            $api_response = $client->post(
+            $this->api_response = $this->client->post(
+                $this->api_address, [
+                'headers' => [
+                    'Authorization' => 'Basic ' . $credentials
+                ]
+            ]);
+        } catch (ServerException $server_exception) {
+            $this->api_response = $server_exception;
+        } catch (ClientException $client_exception) {
+            $this->api_response = $client_exception;
+        } catch (BadResponseException $response_exception) {
+            $this->api_response = $response_exception;
+        }
+
+        return $this->api_response;
+    }
+
+    public function requestSignInPostWithParams($path, $body)
+    {
+        try {
+            $this->api_response = $this->client->post(
                 $this->api_address . $path, [
                 'form_params' => $body
             ]);
         } catch (ServerException $server_exception) {
-            $api_response = $server_exception;
+            $this->api_response = $server_exception;
         } catch (ClientException $client_exception) {
-            $api_response = $client_exception;
+            $this->api_response = $client_exception;
         } catch (BadResponseException $response_exception) {
-            $api_response = $response_exception;
+            $this->api_response = $response_exception;
         }
 
-        return $api_response;
+        return $this->api_response;
 
     }
 }

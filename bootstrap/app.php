@@ -3,7 +3,7 @@ session_start();
 require __DIR__ . '/../vendor/autoload.php';
 $app = new \Slim\App([
     'settings' => [
-        'displayErrorDetails'  => true,
+        'displayErrorDetails' => true,
     ]
 ]);
 //retrive container
@@ -16,32 +16,33 @@ $container = $app->getContainer();
 //};
 
 //register component on container
-$container ['view'] = function ($container){
+$container ['view'] = function ($container) {
 
-    $view = new \Slim\Views\Twig(__DIR__ . '/../resources/views',[
+    $view = new \Slim\Views\Twig(__DIR__ . '/../resources/views', [
         'cache' => false,
     ]);
     //instantiate and add Slim specific extension
     $router = $container->get('router');
     $uri = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
-    $view->addExtension( new \Slim\Views\TwigExtension($router,$uri));
+    $view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
     return $view;
 };
 
-$container['validator'] = function($container){
+$container['validator'] = function ($container) {
     return new App\Validation\Validator;
 };
 
-$container['HomeController'] = function ($container){
+$container['HomeController'] = function ($container) {
     return new \App\Controllers\HomeController($container);
 };
 
-$container['AuthController'] = function ($container){
+$container['AuthController'] = function ($container) {
     return new \App\Controllers\AuthController($container);
 };
 
+$app->add(new \App\Middleware\BaseMiddleware($container));
 $app->add(new \App\Middleware\ValidationErrors($container));
 $app->add(new \App\Middleware\PersistInput($container));
 
 
-require __DIR__.'/../routes/web.php';
+require __DIR__ . '/../routes/web.php';

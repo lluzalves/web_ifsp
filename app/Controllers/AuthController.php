@@ -36,12 +36,12 @@ class AuthController extends BaseController
             'password' => $request->getParam('password')
         );
         $path = "/register";
-        if (method_exists($this->requestPostWithParams($path, $body), 'getCode')) {
-            $result = $this->requestPostWithParams($path, $body)->getCode();
+        $api_request = $this->requestSignInPostWithParams($path, $body);
+        if (method_exists($api_request, 'getCode')) {
+            $result = $api_request->getCode();
         } else {
             $result = 200;
         }
-
 
         if ($result == 200) {
             return $response->withRedirect($this->router->pathFor('auth.signin'));
@@ -58,16 +58,31 @@ class AuthController extends BaseController
 
     public function postSignIn($request, $response)
     {
+        $validation = $this->validator->validate($request, [
+            'email' => v::email(),
+            'password' => v::notEmpty(),
+        ]);
+
+        if ($validation->failed()) {
+            return $response->withRedirect($this->router->pathFor('auth.signin'));
+        }
 
         $auth = array(
-            'name' => $request->getParam('name'),
+            'email' => $request->getParam('email'),
             'password' => $request->getParam('password')
         );
-        $path = "";
-        $result = json_decode($this->requestPostWithParams($path, $auth));
-        if ($result->code == 200) {
+        $api_request = $this->basicAuthRequest($auth);
+        if (method_exists($api_request, 'getBody')) {
+            $api_response = json_decode($api_request->getBody()->getContents());
+            $result = $api_response->code;
+            } else {
+            $result = $api_request->getMessage()['status'];
+        }
+        if ($result == 200) {
+            $_SESSION['token'] = $api_response->token;
             return $response->withRedirect($this->router->pathFor('home'));
         } else {
+            $_SESSION['result_error'] = "Não autorizado, verifique as credenciais";
             return $response->withRedirect($this->router->pathFor('auth.signin'));
         }
     }

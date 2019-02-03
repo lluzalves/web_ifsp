@@ -3,13 +3,15 @@
 namespace App\Middleware;
 
 
-class PersistInput  extends BaseMiddleware
+class PersistInput extends BaseMiddleware
 {
 
     public function __invoke($request, $response, $next)
     {
-        $this->container->view->getEnvironment()->addGlobal('oldData', $_SESSION['oldData']);
-        $_SESSION['oldData'] = $request->getParams();
+        if (isset($_SESSION['oldData'])) {
+            $this->container->view->getEnvironment()->addGlobal('oldData', $_SESSION['oldData']);
+            $_SESSION['oldData'] = $request->getParams();
+        }
 
         $response = $next($request, $response);
         return $response;
