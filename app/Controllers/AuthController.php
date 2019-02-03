@@ -36,7 +36,12 @@ class AuthController extends BaseController
             'password' => $request->getParam('password')
         );
         $path = "/register";
-        $result = $this->requestPostWithParams($path, $body)->getCode();
+        if (method_exists($this->requestPostWithParams($path, $body), 'getCode')) {
+            $result = $this->requestPostWithParams($path, $body)->getCode();
+        } else {
+            $result = 200;
+        }
+
 
         if ($result == 200) {
             return $response->withRedirect($this->router->pathFor('auth.signin'));
