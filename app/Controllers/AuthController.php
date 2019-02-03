@@ -36,12 +36,19 @@ class AuthController extends BaseController
             'password' => $request->getParam('password')
         );
         $path = "/register";
-        $result = json_decode($this->requestPostWithParams($path, $body));
-        if ($result->code == 200) {
+        $result = $this->requestPostWithParams($path, $body)->getCode();
+
+        if ($result == 200) {
             return $response->withRedirect($this->router->pathFor('auth.signin'));
-        } else {
-            return $response->withRedirect($this->router->pathFor('auth.signup'));
+        } else if ($result == 409) {
+            $_SESSION['result_error'] = "Email inválido, já cadastrado";
+        } else if ($result == 500) {
+            $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
+        } else if ($result == 401) {
+            $_SESSION['result_error'] = "Não autorizado";
         }
+        return $response->withRedirect($this->router->pathFor('auth.signup'));
+
     }
 
     public function postSignIn($request, $response)
