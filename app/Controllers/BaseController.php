@@ -78,4 +78,11 @@ abstract class BaseController
         return $this->api_response;
 
     }
+
+    public function getEmail()
+    {
+        if (isset($_SESSION['email'])) {
+            return $_SESSION['email'];
+        }
+    }
 }

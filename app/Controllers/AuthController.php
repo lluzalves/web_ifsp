@@ -75,10 +75,11 @@ class AuthController extends BaseController
         if (method_exists($api_request, 'getBody')) {
             $api_response = json_decode($api_request->getBody()->getContents());
             $result = $api_response->code;
-            } else {
+        } else {
             $result = $api_request->getMessage()['status'];
         }
         if ($result == 200) {
+            $_SESSION['email'] = $request->getParam('email');
             $_SESSION['token'] = $api_response->token;
             return $response->withRedirect($this->router->pathFor('home'));
         } else {
