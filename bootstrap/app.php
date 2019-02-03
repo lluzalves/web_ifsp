@@ -28,6 +28,10 @@ $container ['view'] = function ($container){
     return $view;
 };
 
+$container['validator'] = function($container){
+    return new App\Validation\Validator;
+};
+
 $container['HomeController'] = function ($container){
     return new \App\Controllers\HomeController($container);
 };
@@ -35,6 +39,9 @@ $container['HomeController'] = function ($container){
 $container['AuthController'] = function ($container){
     return new \App\Controllers\AuthController($container);
 };
+
+$app->add(new \App\Middleware\ValidationErrors($container));
+$app->add(new \App\Middleware\PersistInput($container));
 
 
 require __DIR__.'/../routes/web.php';

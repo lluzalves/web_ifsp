@@ -13,6 +13,7 @@ abstract class BaseController
     protected $view;
     protected $client;
     protected $router;
+    protected $validator;
     protected $api_address = 'http://192.168.0.15/slim_app/public';
 
     public function __construct(ContainerInterface $container)
@@ -20,6 +21,7 @@ abstract class BaseController
         $this->container = $container;
         $this->view = $container->view;
         $this->router = $container->router;
+        $this->validator = $container->validator;
         $this->client = new Client();
     }
 
@@ -40,7 +42,7 @@ abstract class BaseController
             'form_params' => $body
         ]);
 
-        // var_dump($api_response->getBody()->getContents());
+        //var_dump($api_response->getBody()->getContents());
 
         return $api_response->getBody()->getContents();
 

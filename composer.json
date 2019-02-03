@@ -2,7 +2,8 @@
     "require": {
         "slim/slim": "^3.12",
         "slim/twig-view": "^2.4",
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "^6.3",
+        "respect/validation": "^1.1"
     },
     "autoload": {
         "psr-4": {
