@@ -16,18 +16,23 @@ class HomeController extends BaseController
         $path = "/documents";
         $api_request = $this->tokenRequest($path);
         if (method_exists($api_request, 'getCode')) {
-            $result = $api_request->getCode();
+            $result = $api_request;
+            $result_code = $result->getCode();
         } else {
-            $result = 200;
+            $result = $api_request->getBody()->getContents();
+            $result_code = json_decode($result)->code;
         }
-
-        if ($result == 204) {
-           $_SESSION['anyDocument'] = false;
-        } else if ($result == 200) {
-            $_SESSION['anyDocument'] = true;
-        } else if ($result == 500) {
+        if ($result_code == 204) {
+            $documents = json_decode($result)->documents;
+            if (count($documents) > 0) {
+                $_SESSION['anyDocuments'] = true;
+                $_SESSION['documents'] = $documents;
+            } else {
+                $_SESSION['anyDocuments'] = false;
+            }
+        } else if ($result_code == 500) {
             $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
-        } else if ($result == 401) {
+        } else if ($result_code == 401) {
             $_SESSION['result_error'] = "Não autorizado";
         }
         return $response->withRedirect($this->router->pathFor('auth.signup'));
