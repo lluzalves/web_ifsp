@@ -19,12 +19,6 @@ class DocumentData extends BaseMiddleware
             $_SESSION['anyDocuments'] = $request->getParams();
         }
 
-        if (isset($_SESSION['documents'])) {
-            $this->container->view->getEnvironment()->addGlobal('documents', $_SESSION['documents']);
-            $_SESSION['documents'] = $request->getParams();
-        }
-
-
         $response = $next($request, $response);
         return $response;
     }

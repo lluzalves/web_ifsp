@@ -35,7 +35,8 @@ class HomeController extends BaseController
         } else if ($result_code == 401) {
             $_SESSION['result_error'] = "Não autorizado";
         }
-        return $response->withRedirect($this->router->pathFor('auth.signup'));
+
+        $this->container->view->getEnvironment()->addGlobal('documents', $_SESSION['documents']);
 
     }
 }
