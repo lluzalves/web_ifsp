@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Middleware\BaseMiddleware;
 use Interop\Container\ContainerInterface;
 use GuzzleHttp\Client;
 use Slim\Views\Twig as View;
@@ -47,6 +48,28 @@ abstract class BaseController
                 $this->api_address, [
                 'headers' => [
                     'Authorization' => 'Basic ' . $credentials
+                ]
+            ]);
+        } catch (ServerException $server_exception) {
+            $this->api_response = $server_exception;
+        } catch (ClientException $client_exception) {
+            $this->api_response = $client_exception;
+        } catch (BadResponseException $response_exception) {
+            $this->api_response = $response_exception;
+        }
+
+        return $this->api_response;
+    }
+
+    public function tokenRequest($path)
+    {
+
+        $credentials = BaseMiddleware::getToken();
+        try {
+            $this->api_response = $this->client->get(
+                $this->api_address . $path, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $credentials
                 ]
             ]);
         } catch (ServerException $server_exception) {

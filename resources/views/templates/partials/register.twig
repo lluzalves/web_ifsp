@@ -1,51 +1,58 @@
-<div class="container align-content-center">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-5 mx-auto">
-            <div class="myform form ">
-                <div class="col-md-12 text-center">
-                    <h1>Registrar</h1>
+        <div class="col-md-4 d- d-md-block bg-light sidebar">
+            <div class="myform form col-md-16">
+                <div class="logo mb-3">
+                    <div class="col-md-12 text-center">
+                        <h1>Registrar</h1>
+                    </div>
                 </div>
+                <form action="{{ path_for('auth.signup') }}" name="registration" method="post">
+                    <div class="form-group  {{ errors.name }} ? 'has-error' : '' }}">
+                        <label>Nome</label>
+                        <input type="text" name="name" class="form-control" id="firstname" aria-describedby="emailHelp"
+                               placeholder="Digite o seu nome" value="{{ oldData.name }}">
+                        {% if errors.name %}
+                            <span class="help-block" style="color:crimson">Por favor, insira um nome válido</span>
+                        {% endif %}
+                    </div>
+                    <div class="form-group  {{ errors.email }}? 'has-error' : '' }}">
+                        <label>Email</label>
+                        <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp"
+                               placeholder="Digite o seu email" value="{{ oldData.email }}">
+                        {% if errors.email %}
+                            <span class="help-block" style="color:crimson">Email inválido, digite novamente</span>
+                        {% endif %}
+                    </div>
+                    <div class="form-group  {{ errors.password }} ? 'has-error' : '' }}">
+                        <label>Senha</label>
+                        <input type="password" name="password" id="password" class="form-control"
+                               aria-describedby="emailHelp" placeholder="Digite sua senha">
+                        {% if errors.password %}
+                            <span class="help-block" style="color:crimson">Por favor, insira uma senha válida</span>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-12 text-center mb-3">
+                        <button type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Registrar</button>
+                    </div>
+                    <div class="col-md-12  has-error">
+                        <div class="form-group">
+                            <p class="text-center"><a href="login" id="signin">Já possui uma conta?</a></p>
+                        </div>
+                    </div>
+                    <div class="col-md-12  has-error">
+                        <div class="form-group">
+                            <p class="text-center" style="color:crimson"><a id="error">{{ result_error }}</a></p>
+                        </div>
+                    </div>
+                </form>
             </div>
-
-            <form action="{{ path_for('auth.signup') }}" name="registration" method="post">
-                <div class="form-group  {{ errors.name }} ? 'has-error' : '' }}">
-                    <label>Nome</label>
-                    <input type="text" name="name" class="form-control" id="firstname" aria-describedby="emailHelp"
-                           placeholder="Digite o seu nome" value="{{ oldData.name }}">
-                    {% if errors.name %}
-                        <span class="help-block" style="color:crimson">Por favor, insira um nome válido</span>
-                    {% endif %}
-                </div>
-                <div class="form-group  {{ errors.email }}? 'has-error' : '' }}">
-                    <label>Email</label>
-                    <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp"
-                           placeholder="Digite o seu email" value="{{ oldData.email }}">
-                    {% if errors.email %}
-                        <span class="help-block" style="color:crimson">Email inválido, digite novamente</span>
-                    {% endif %}
-                </div>
-                <div class="form-group  {{ errors.password }} ? 'has-error' : '' }}">
-                    <label>Senha</label>
-                    <input type="password" name="password" id="password" class="form-control"
-                           aria-describedby="emailHelp" placeholder="Digite sua senha">
-                    {% if errors.password %}
-                        <span class="help-block" style="color:crimson">Por favor, insira uma senha válida</span>
-                    {% endif %}
-                </div>
-                <div class="col-md-12 text-center mb-3">
-                    <button type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Registrar</button>
-                </div>
-                <div class="col-md-12  has-error">
-                    <div class="form-group">
-                        <p class="text-center"><a href="login" id="signin">Já possui uma conta?</a></p>
-                    </div>
-                </div>
-                <div class="col-md-12  has-error">
-                    <div class="form-group">
-                        <p class="text-center" style="color:crimson"><a id="error">{{ result_error }}</a></p>
-                    </div>
-                </div>
-            </form>
         </div>
-    </div>
+        <div class="col-md-8 mx-auto">
+            <div class="col-md-15">
+                <img src="https://i.imgur.com/U3B12F1.jpg" height="720" width="920"/>
+            </div>
+        </div>
+     </div>
 </div>
+
