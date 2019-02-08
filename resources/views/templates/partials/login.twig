@@ -38,6 +38,10 @@
                     <div class="form-group">
                         <p class="text-center">Não possue uma conta? <a href="register" id="signup">Registrar</a></p>
                     </div>
+                    <div class="form-group">
+                        <p class="text-center">Esqueceu a senha? <a href="{{ path_for('auth.recover') }}">Recuperar</a>
+                        </p>
+                    </div>
                     <div class="col-md-12  has-error">
                         <div class="form-group">
                             <p class="text-center" style="color:crimson"><a id="error">{{ result_error }}</a></p>

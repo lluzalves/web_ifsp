@@ -22,7 +22,8 @@
                                     <b>{{ document.type }}</b>
                                     <p>{{ document.notification }}</p>
                                     <p>{{ document.updated_at }}</p>
-                                    <p><b>+Detalhes</b></p>
+                                    <a class="text-center btn btn-primary btn-sm active" data-toggle="button"
+                                       href="documents/{{ document.id }}">+Detalhes</a>
                                 </div>
                             </div>
                         </div>

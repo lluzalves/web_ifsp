@@ -88,5 +88,14 @@ class AuthController extends BaseController
         }
     }
 
+    public function recoverCredentials($request, $response)
+    {
+        return $this->view->render($response, 'recover.twig');
+    }
+
+    public function sendRecoverUrlMail()
+    {
+
+    }
 
 }
