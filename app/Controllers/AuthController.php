@@ -24,6 +24,7 @@ class AuthController extends BaseController
             'email' => v::email(),
             'name' => v::notEmpty(),
             'password' => v::notEmpty(),
+            'prontuario' => v::notEmpty()
         ]);
 
         if ($validation->failed()) {
@@ -33,7 +34,8 @@ class AuthController extends BaseController
         $body = array(
             'name' => $request->getParam('name'),
             'email' => $request->getParam('email'),
-            'password' => $request->getParam('password')
+            'password' => $request->getParam('password'),
+            'pontuario' => $request->getParam('prontuario')
         );
         $path = "/register";
         $api_request = $this->requestSignInPostWithParams($path, $body);

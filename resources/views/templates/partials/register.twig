@@ -10,10 +10,18 @@
                 <form action="{{ path_for('auth.signup') }}" name="registration" method="post">
                     <div class="form-group  {{ errors.name }} ? 'has-error' : '' }}">
                         <label>Nome</label>
-                        <input type="text" name="name" class="form-control" id="firstname" aria-describedby="emailHelp"
+                        <input type="text" name="name" class="form-control" id="name"
                                placeholder="Digite o seu nome" value="{{ oldData.name }}">
                         {% if errors.name %}
                             <span class="help-block" style="color:crimson">Por favor, insira um nome válido</span>
+                        {% endif %}
+                    </div>
+                    <div class="form-group  {{ errors.prontuario }} ? 'has-error' : '' }}">
+                        <label>Prontuário</label>
+                        <input type="text" name="name" class="form-control" id="prontuario"
+                               placeholder="Digite o prontuário" value="{{ oldData.name }}">
+                        {% if errors.name %}
+                            <span class="help-block" style="color:crimson">Por favor, informe o prontuário</span>
                         {% endif %}
                     </div>
                     <div class="form-group  {{ errors.email }}? 'has-error' : '' }}">
@@ -53,6 +61,6 @@
                 <img src="https://i.imgur.com/U3B12F1.jpg" height="720" width="920"/>
             </div>
         </div>
-     </div>
+    </div>
 </div>
 
