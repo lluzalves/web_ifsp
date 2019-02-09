@@ -8,6 +8,7 @@
                     </div>
                 </div>
                 <form action="{{ path_for('auth.signup') }}" name="registration" method="post">
+
                     <div class="form-group  {{ errors.name }} ? 'has-error' : '' }}">
                         <label>Nome</label>
                         <input type="text" name="name" class="form-control" id="name"
@@ -16,14 +17,16 @@
                             <span class="help-block" style="color:crimson">Por favor, insira um nome válido</span>
                         {% endif %}
                     </div>
+
                     <div class="form-group  {{ errors.prontuario }} ? 'has-error' : '' }}">
                         <label>Prontuário</label>
-                        <input type="text" name="name" class="form-control" id="prontuario"
-                               placeholder="Digite o prontuário" value="{{ oldData.name }}">
-                        {% if errors.name %}
+                        <input type="text" name="prontuario" class="form-control" id="prontuario"
+                               placeholder="Digite o prontuário" value="{{ oldData.prontuario }}">
+                        {% if errors.prontuario %}
                             <span class="help-block" style="color:crimson">Por favor, informe o prontuário</span>
                         {% endif %}
                     </div>
+
                     <div class="form-group  {{ errors.email }}? 'has-error' : '' }}">
                         <label>Email</label>
                         <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp"
@@ -32,6 +35,7 @@
                             <span class="help-block" style="color:crimson">Email inválido, digite novamente</span>
                         {% endif %}
                     </div>
+
                     <div class="form-group  {{ errors.password }} ? 'has-error' : '' }}">
                         <label>Senha</label>
                         <input type="password" name="password" id="password" class="form-control"
@@ -40,6 +44,7 @@
                             <span class="help-block" style="color:crimson">Por favor, insira uma senha válida</span>
                         {% endif %}
                     </div>
+
                     <div class="col-md-12 text-center mb-3">
                         <button type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Registrar</button>
                     </div>
@@ -48,6 +53,7 @@
                             <p class="text-center"><a href="login" id="signin">Já possui uma conta?</a></p>
                         </div>
                     </div>
+
                     <div class="col-md-12  has-error">
                         <div class="form-group">
                             <p class="text-center" style="color:crimson"><a id="error">{{ result_error }}</a></p>

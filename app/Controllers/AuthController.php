@@ -22,9 +22,9 @@ class AuthController extends BaseController
     {
         $validation = $this->validator->validate($request, [
             'email' => v::email(),
+            'prontuario' => v::notBlank(),
             'name' => v::notEmpty(),
             'password' => v::notEmpty(),
-            'prontuario' => v::notEmpty()
         ]);
 
         if ($validation->failed()) {
@@ -35,8 +35,11 @@ class AuthController extends BaseController
             'name' => $request->getParam('name'),
             'email' => $request->getParam('email'),
             'password' => $request->getParam('password'),
-            'pontuario' => $request->getParam('prontuario')
+            'prontuario' => $request->getParam('prontuario'),
+            'role' => 'aluno',
+            'profile_icon' => 'aluno_basic'
         );
+
         $path = "/register";
         $api_request = $this->requestSignInPostWithParams($path, $body);
         if (method_exists($api_request, 'getCode')) {

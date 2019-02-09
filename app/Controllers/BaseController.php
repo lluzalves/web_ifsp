@@ -42,7 +42,7 @@ abstract class BaseController
     public function basicAuthRequest($body)
     {
 
-        $credentials = base64_encode($body['email'].':'.$body['password']);
+        $credentials = base64_encode($body['email'] . ':' . $body['password']);
         try {
             $this->api_response = $this->client->post(
                 $this->api_address, [
