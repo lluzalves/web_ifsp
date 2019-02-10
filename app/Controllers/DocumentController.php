@@ -111,10 +111,6 @@ class DocumentController extends BaseController
             $result = 200;
         }
 
-        var_dump(json_decode(json_encode($file))->file);
-        var_dump($api_request->getMessage());
-        exit();
-
         if ($result == 200) {
             return $response->withRedirect($this->router->pathFor('home'));
         } else if ($result == 409) {

@@ -17,10 +17,6 @@ class BaseMiddleware
 
     public function __invoke($request, $response, $next)
     {
-        if (isset($_SESSION['token'])) {
-            $this->getToken();
-        }
-
         if (isset($_SESSION['role'])) {
             $this->container->view->getEnvironment()->addGlobal('role', $_SESSION['role']);
         }
@@ -31,7 +27,11 @@ class BaseMiddleware
 
     public function getToken()
     {
-        return $_SESSION['token'];
+        if (isset($_SESSION['token']) && array_key_exists('token', $_SESSION)) {
+            return $_SESSION['token'];
+        } else
+            return null;
+
     }
 
 }

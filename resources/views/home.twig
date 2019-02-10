@@ -3,7 +3,6 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-    {{ role }}
     {% if role == 'aluno' %}
         {% include 'templates/partials/student_dashboard' %}
     {% else %}

@@ -126,7 +126,7 @@ abstract class BaseController
                     [
                         'Content-type' => 'multipart/form-data',
                         'name' => 'file',
-                        'contents' => fopen(json_decode(json_encode($file))->file, r),
+                        'contents' => $file->getStream(),
                     ]
                 ]
             ]);

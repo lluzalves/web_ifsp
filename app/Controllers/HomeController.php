@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Controllers;
+use App\Middleware\BaseMiddleware;
+
 class HomeController extends BaseController
 {
 
@@ -9,7 +11,11 @@ class HomeController extends BaseController
         $this->view->getEnvironment()->addGlobal('email', $this->getEmail());
         $doc = new DocumentController($this->container);
         $doc->requestDocuments($request, $response);
-        return $this->view->render($response, 'home.twig');
+        if(BaseMiddleware::getToken()!=null) {
+            return $this->view->render($response, 'home.twig');
+        }else{
+            return $response->withRedirect($this->router->pathFor('auth.signin'));
+        }
     }
 
 }
