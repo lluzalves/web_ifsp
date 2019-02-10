@@ -25,6 +25,6 @@ $app->group("/auth", function () {
 
 $app->group('/document', function () {
     $this->get('',DocumentController::class . ':showAddForm')->setName('document.form');
-    $this->get('{document_id}', DocumentController::class . ':getDocument')->setName('document.details');
+    $this->get('/{document_id}', DocumentController::class . ':requestDocument')->setName('document.details');
     $this->post('', DocumentController::class . ':addDocument')->setName('document.add');
 });

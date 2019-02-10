@@ -39,9 +39,9 @@ class DocumentController extends BaseController
 
     }
 
-    public function requestDocument($request, $response)
+    public function requestDocument($request, $response, $args)
     {
-        $path = "/documents";
+        $path = "/documents/" . $args['document_id'];
         $api_request = $this->tokenRequest($path);
         if (method_exists($api_request, 'getCode')) {
             $result = $api_request;
@@ -50,11 +50,12 @@ class DocumentController extends BaseController
             $result = $api_request->getBody()->getContents();
             $result_code = json_decode($result)->code;
         }
+
         if ($result_code == 204) {
-            $documents = json_decode($result)->documents;
-            if (count($documents) > 0) {
+            $document = json_decode($result)->documents[0];
+            if ($document != null) {
                 $_SESSION['anyDocuments'] = true;
-                $_SESSION['documents'] = $documents;
+                $_SESSION['document'] = $document;
             } else {
                 $_SESSION['anyDocuments'] = false;
             }
@@ -64,8 +65,8 @@ class DocumentController extends BaseController
             $_SESSION['result_error'] = "Não autorizado";
         }
 
-        $this->container->view->getEnvironment()->addGlobal('documents', $_SESSION['documents']);
-
+        $this->container->view->getEnvironment()->addGlobal('document', $_SESSION['document']);
+        return $this->view->render($response, 'document/details.twig');
     }
 
     public function addDocument($request, $response)
