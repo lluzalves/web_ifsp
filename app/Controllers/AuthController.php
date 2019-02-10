@@ -2,8 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\User;
-use Slim\Views\Twig as View;
 use Respect\Validation\Validator as v;
 
 class AuthController extends BaseController
@@ -86,6 +84,7 @@ class AuthController extends BaseController
         if ($result == 200) {
             $_SESSION['email'] = $request->getParam('email');
             $_SESSION['token'] = $api_response->token;
+            $_SESSION['role'] = $api_response->role;
             return $response->withRedirect($this->router->pathFor('home'));
         } else {
             $_SESSION['result_error'] = "Não autorizado, verifique as credenciais";

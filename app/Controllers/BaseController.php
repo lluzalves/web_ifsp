@@ -83,6 +83,65 @@ abstract class BaseController
         return $this->api_response;
     }
 
+    public function postTokenRequest($path, $data)
+    {
+
+        $credentials = BaseMiddleware::getToken();
+        try {
+            $this->api_response = $this->client->post(
+                $this->api_address . $path, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $credentials
+                ],
+                'form-data' => [$data
+
+                ]
+            ]);
+        } catch (ServerException $server_exception) {
+            $this->api_response = $server_exception;
+        } catch (ClientException $client_exception) {
+            $this->api_response = $client_exception;
+        } catch (BadResponseException $response_exception) {
+            $this->api_response = $response_exception;
+        }
+
+        return $this->api_response;
+    }
+
+
+    public function multiPartTokenRequest($path, $data, $file)
+    {
+
+        $credentials = BaseMiddleware::getToken();
+        try {
+            $this->api_response = $this->client->post(
+                $this->api_address . $path, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $credentials
+                ],
+                'form-data' => [$data
+
+                ],
+                'multipart' => [
+                    [
+                        'Content-type' => 'multipart/form-data',
+                        'name' => 'file',
+                        'contents' => fopen(json_decode(json_encode($file))->file, r),
+                    ]
+                ]
+            ]);
+        } catch (ServerException $server_exception) {
+            $this->api_response = $server_exception;
+        } catch (ClientException $client_exception) {
+            $this->api_response = $client_exception;
+        } catch (BadResponseException $response_exception) {
+            $this->api_response = $response_exception;
+        }
+
+        return $this->api_response;
+    }
+
+
     public function requestSignInPostWithParams($path, $body)
     {
         try {

@@ -1,0 +1,64 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 d- d-md-block bg-light sidebar">
+            <div class="myform form col-md-16">
+                <div class="logo mb-3">
+                    <div class="col-md-12 text-center">
+                        <h1>Adicionar</h1>
+                    </div>
+                </div>
+                <form action="{{ path_for('document.add')}}" name="addDocument" method="post" enctype="multipart/form-data">
+
+                    <div class="form-group  {{ errors.description }} ? 'has-error' : '' }}">
+                        <label>Descrição</label>
+                        <input type="text" name="description" class="form-control" id="description"
+                               placeholder="Informações sobre o documento" value="{{ oldData.description }}">
+                        {% if errors.description %}
+                            <span class="help-block" style="color:crimson">Esse campo não pode ser vazio</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tipo</label>
+                        <select name="type" class="form-control">
+                            <option selected>Cpf</option>
+                            <option>Comprovante de Moradia</option>
+                            <option>Comprovante de Aluguel</option>
+                            <option>Comprovante de Matrícula</option>
+                            <option>Atestado Médico</option>
+                            <option>Carteira de Trabalho</option>
+                            <option>Historico Escolar</option>
+                            <option>Outro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group  {{ errors.file }}? 'has-error' : '' }}">
+                        <label>Arquivo</label>
+                        <input type="file" name="file" id="file"  accept="image/*"
+                               placeholder="Insira arquivo" value="{{ oldData.file }}">
+                        {% if file == null %}
+                            <span class="help-block" style="color:crimson"><p>Por favor insira um arquivo</p></span>
+                        {% endif %}
+                    </div>
+
+
+                    <div class="col-md-12 text-center mb-3">
+                        <button type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Adicionar</button>
+                    </div>
+
+                    <div class="col-md-12  has-error">
+                        <div class="form-group">
+                            <p class="text-center" style="color:crimson"><a id="error">{{ result_error }}</a></p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-8 mx-auto">
+            <div class="col-md-15">
+                <img src="https://i.imgur.com/W3oDn0o.jpg" height="720" width="920"/>
+            </div>
+        </div>
+    </div>
+</div>
+

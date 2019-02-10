@@ -21,6 +21,10 @@ class BaseMiddleware
             $this->getToken();
         }
 
+        if (isset($_SESSION['role'])) {
+            $this->container->view->getEnvironment()->addGlobal('role', $_SESSION['role']);
+        }
+
         $response = $next($request, $response);
         return $response;
     }

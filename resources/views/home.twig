@@ -3,5 +3,10 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-    {% include 'templates/partials/student_dashboard' %}
+    {{ role }}
+    {% if role == 'aluno' %}
+        {% include 'templates/partials/student_dashboard' %}
+    {% else %}
+        {% include 'templates/partials/admin_dashboard' %}
+    {% endif %}
 {% endblock %}

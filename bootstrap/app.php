@@ -44,6 +44,6 @@ $app->add(new \App\Middleware\BaseMiddleware($container));
 $app->add(new \App\Middleware\ValidationErrors($container));
 $app->add(new \App\Middleware\PersistInput($container));
 $app->add(new \App\Middleware\DocumentData($container));
-
+$app->add(new \App\Middleware\UserData($container));
 
 require __DIR__ . '/../routes/web.php';

@@ -2,6 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Models\User;
+use Respect\Validation\Validator as v;
+
 class DocumentController extends BaseController
 {
 
@@ -62,5 +65,70 @@ class DocumentController extends BaseController
 
         $this->container->view->getEnvironment()->addGlobal('documents', $_SESSION['documents']);
 
+    }
+
+    public function addDocument($request, $response)
+    {
+        $path = "/documents";
+
+        $files = $request->getUploadedFiles();
+        $file = $files['file'];
+        $filename = json_encode($files);
+        $isFileAtacched = v::notBlank()->validate(json_decode($filename)->file);
+
+        $user = new UserController($this->container);
+        $user->requestUser($_SESSION['email']);
+
+        $type = ($_POST['type']);
+
+        $validation = $this->validator->validate($request, [
+            'description' => v::notBlank(),
+        ]);
+
+        if (!$isFileAtacched) {
+            $_SESSION['file'] = null;
+            $this->container->view->getEnvironment()->addGlobal('file', $_SESSION['file']);
+        }
+
+        if ($validation->failed() || !$isFileAtacched) {
+            return $response->withRedirect($this->router->pathFor('document.add'));
+        }
+
+        $body = array(
+            'description' => $request->getParam('description'),
+            'user_id' => $_SESSION['user'],
+            'is_validated' => false,
+            'type' => $type,
+            'notification' => 'Pendente',
+        );
+
+
+        $path = "/documents";
+        $api_request = $this->multiPartTokenRequest($path, $body, $file);
+        if (method_exists($api_request, 'getCode')) {
+            $result = $api_request->getCode();
+        } else {
+            $result = 200;
+        }
+
+        var_dump(json_decode(json_encode($file))->file);
+        var_dump($api_request->getMessage());
+        exit();
+
+        if ($result == 200) {
+            return $response->withRedirect($this->router->pathFor('home'));
+        } else if ($result == 409) {
+            $_SESSION['result_error'] = "Email inválido, já cadastrado";
+        } else if ($result == 500) {
+            $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
+        } else if ($result == 401) {
+            $_SESSION['result_error'] = "Não autorizado";
+        }
+        return $response->withRedirect($this->router->pathFor('document.add'));
+    }
+
+    public function showAddForm($request, $response)
+    {
+        return $this->view->render($response, 'document/add.twig');
     }
 }
