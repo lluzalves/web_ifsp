@@ -1,6 +1,6 @@
 RewriteEngine On
 CGIPassAuth On
-php_flag display_errors off
+php_flag display_errors on
 SetEnvIf Authorization "(.*)" HTTP
 RewriteCond %{HTTP:Authorization} ^(.*)
 RewriteRule .* - [env=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

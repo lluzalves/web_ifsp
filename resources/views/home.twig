@@ -4,7 +4,7 @@
 
 {% block content %}
     {% if role == 'aluno' %}
-        {% include 'templates/partials/student_dashboard' %}
+        {% include 'templates/partials/student_dashboard.twig' %}
     {% else %}
         {% include 'templates/partials/admin_dashboard' %}
     {% endif %}

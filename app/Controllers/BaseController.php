@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Middleware\BaseMiddleware;
 use Interop\Container\ContainerInterface;
 use GuzzleHttp\Client;
+use Slim\Http\UploadedFile;
 use Slim\Views\Twig as View;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Exception\ClientException;
@@ -19,7 +20,7 @@ abstract class BaseController
     protected $router;
     protected $validator;
     protected $api_response;
-    protected $api_address = 'http://192.168.0.15/slim_app/public';
+    protected $api_address = 'http://192.168.0.22/slim_app/public';
 
     public function __construct(ContainerInterface $container)
     {
@@ -109,8 +110,18 @@ abstract class BaseController
     }
 
 
-    public function multiPartTokenRequest($path, $data, $file)
+    public function multiPartTokenRequest($path, $description, $userId, $type, $file)
     {
+
+        if ($file->getError() === UPLOAD_ERR_OK) {
+            $extension = pathinfo($file->getClientFileName(), PATHINFO_EXTENSION);
+            $baseName = bin2hex(random_bytes(8));
+            $filename = sprintf("%s.%0.8s", $baseName, $extension);
+            $directory = 'upload' . DIRECTORY_SEPARATOR . $_SESSION['prontuario'];
+            mkdir($directory, 0700, true);
+            $uploadedFilePath = $directory . DIRECTORY_SEPARATOR . $filename;
+            $file->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
+        }
 
         $credentials = BaseMiddleware::getToken();
         try {
@@ -119,15 +130,15 @@ abstract class BaseController
                 'headers' => [
                     'Authorization' => 'Bearer ' . $credentials
                 ],
-                'form-data' => [$data
-
-                ],
                 'multipart' => [
                     [
                         'Content-type' => 'multipart/form-data',
                         'name' => 'file',
-                        'contents' => $file->getStream(),
-                    ]
+                        'contents' => fopen($uploadedFilePath, 'r'),
+                    ],
+                    $description,
+                    $userId,
+                    $type
                 ]
             ]);
         } catch (ServerException $server_exception) {
@@ -138,6 +149,8 @@ abstract class BaseController
             $this->api_response = $response_exception;
         }
 
+        fclose($uploadedFilePath);
+        unlink($uploadedFilePath);
         return $this->api_response;
     }
 

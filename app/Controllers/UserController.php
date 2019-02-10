@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Daniel
- * Date: 09/02/2019
- * Time: 19:34
- */
-
 namespace App\Controllers;
 
 
@@ -28,6 +21,7 @@ class UserController extends BaseController
             if ($user != null) {
                 $_SESSION['user'] = true;
                 $_SESSION['user'] = $user->id;
+                $_SESSION['prontuario'] = $user->prontuario;
             } else {
                 $_SESSION['user'] = false;
             }

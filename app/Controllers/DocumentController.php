@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\User;
+use function GuzzleHttp\Promise\exception_for;
 use Respect\Validation\Validator as v;
 
 class DocumentController extends BaseController
@@ -74,7 +75,7 @@ class DocumentController extends BaseController
         $files = $request->getUploadedFiles();
         $file = $files['file'];
         $filename = json_encode($files);
-        $isFileAtacched = v::notBlank()->validate(json_decode($filename)->file);
+        $isFileAttacched = v::notBlank()->validate(json_decode($filename)->file);
 
         $user = new UserController($this->container);
         $user->requestUser($_SESSION['email']);
@@ -85,26 +86,34 @@ class DocumentController extends BaseController
             'description' => v::notBlank(),
         ]);
 
-        if (!$isFileAtacched) {
+        if (!$isFileAttacched) {
             $_SESSION['file'] = null;
             $this->container->view->getEnvironment()->addGlobal('file', $_SESSION['file']);
         }
 
-        if ($validation->failed() || !$isFileAtacched) {
+        if ($validation->failed() || !$isFileAttacched) {
             return $response->withRedirect($this->router->pathFor('document.add'));
         }
 
-        $body = array(
-            'description' => $request->getParam('description'),
-            'user_id' => $_SESSION['user'],
-            'is_validated' => false,
-            'type' => $type,
-            'notification' => 'Pendente',
-        );
+        $description = [
+            'Content-type' => 'multipart/form-data',
+            'name' => 'description',
+            'contents' => $request->getParam('description'),
+        ];
 
+        $userId = [
+            'Content-type' => 'multipart/form-data',
+            'name' => 'user_id',
+            'contents' => $_SESSION['user'],
+        ];
+        $type = [
+            'Content-type' => 'multipart/form-data',
+            'name' => 'type',
+            'contents' => $type,
+        ];
 
         $path = "/documents";
-        $api_request = $this->multiPartTokenRequest($path, $body, $file);
+        $api_request = $this->multiPartTokenRequest($path, $description, $userId, $type, $file);
         if (method_exists($api_request, 'getCode')) {
             $result = $api_request->getCode();
         } else {
