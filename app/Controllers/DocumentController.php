@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Models\User;
-use function GuzzleHttp\Promise\exception_for;
 use Respect\Validation\Validator as v;
 
 class DocumentController extends BaseController
@@ -13,6 +12,7 @@ class DocumentController extends BaseController
     {
         $path = "/documents";
         $api_request = $this->tokenRequest($path);
+
         if (method_exists($api_request, 'getCode')) {
             $result = $api_request;
             $result_code = $result->getCode();
@@ -43,6 +43,7 @@ class DocumentController extends BaseController
     {
         $path = "/documents/" . $args['document_id'];
         $api_request = $this->tokenRequest($path);
+
         if (method_exists($api_request, 'getCode')) {
             $result = $api_request;
             $result_code = $result->getCode();
@@ -54,6 +55,41 @@ class DocumentController extends BaseController
         if ($result_code == 204) {
             $document = json_decode($result)->documents[0];
             if ($document != null) {
+                $_SESSION['anyDocuments'] = true;
+                $_SESSION['document'] = $document;
+            } else {
+                $_SESSION['anyDocuments'] = false;
+            }
+        } else if ($result_code == 500) {
+            $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
+        } else if ($result_code == 401) {
+            $_SESSION['result_error'] = "Não autorizado";
+        }
+
+        $this->container->view->getEnvironment()->addGlobal('document', $_SESSION['document']);
+        return $this->view->render($response, 'document/details.twig');
+    }
+
+
+    public function requestDocumentAttachment($request, $response, $args)
+    {
+        $path = "/documents/" . $args['document_id'] . '/attachment';
+        $api_request = $this->tokenStreamRequest($path);
+        if (method_exists($api_request, 'getCode')) {
+            $result = $api_request;
+            $result_code = $result->getCode();
+        } else {
+            $result = $api_request->getBody()->getContents();
+            $result_code = json_decode($result)->code;
+        }
+
+        if ($result_code == 204) {
+            $attachment = $api_request->getBody();
+
+            // need to figure out how to download file correctly, currently the download size is zero.
+            return $api_request->withHeader('Content-Description', 'File Transfer');
+            exit();
+            if ($attachment != null) {
                 $_SESSION['anyDocuments'] = true;
                 $_SESSION['document'] = $document;
             } else {
@@ -91,7 +127,6 @@ class DocumentController extends BaseController
             $_SESSION['file'] = null;
             $this->container->view->getEnvironment()->addGlobal('file', $_SESSION['file']);
         }
-
         if ($validation->failed() || !$isFileAttacched) {
             return $response->withRedirect($this->router->pathFor('document.add'));
         }
@@ -123,8 +158,6 @@ class DocumentController extends BaseController
 
         if ($result == 200) {
             return $response->withRedirect($this->router->pathFor('home'));
-        } else if ($result == 409) {
-            $_SESSION['result_error'] = "Email inválido, já cadastrado";
         } else if ($result == 500) {
             $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
         } else if ($result == 401) {
@@ -133,8 +166,29 @@ class DocumentController extends BaseController
         return $response->withRedirect($this->router->pathFor('document.add'));
     }
 
-    public function showAddForm($request, $response)
+    public function delete($request, $response, $args)
+    {
+        $path = "/documents/" . $args['document_id'];
+        $api_request = $this->tokenDeleteRequest($path);
+        if (method_exists($api_request, 'getCode')) {
+            $result = $api_request->getCode();
+        } else {
+            $result = 200;
+        }
+
+        if ($result == 200) {
+            return $response->withRedirect($this->router->pathFor('home'));
+        } else if ($result == 500) {
+            $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
+        } else if ($result == 401) {
+            $_SESSION['result_error'] = "Não autorizado";
+        }
+    }
+
+    public
+    function showAddForm($request, $response)
     {
         return $this->view->render($response, 'document/add.twig');
     }
+
 }

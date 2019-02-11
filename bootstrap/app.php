@@ -6,14 +6,14 @@ $app = new \Slim\App([
         'displayErrorDetails' => true,
     ]
 ]);
-//retrive container
+//retrieve container
 $container = $app->getContainer();
 
-//api token access
-
-//$container['token'] = function(){
-//    return
-//};
+$app->add(function ($request, $response, $next) {
+    $response = $response->withHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+    $response = $next ($request, $response);
+    return $response;
+});
 
 //register component on container
 $container ['view'] = function ($container) {

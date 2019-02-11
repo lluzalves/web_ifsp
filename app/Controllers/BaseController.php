@@ -64,7 +64,6 @@ abstract class BaseController
 
     public function tokenRequest($path)
     {
-
         $credentials = BaseMiddleware::getToken();
         try {
             $this->api_response = $this->client->get(
@@ -72,6 +71,49 @@ abstract class BaseController
                 'headers' => [
                     'Authorization' => 'Bearer ' . $credentials
                 ]
+            ]);
+        } catch (ServerException $server_exception) {
+            $this->api_response = $server_exception;
+        } catch (ClientException $client_exception) {
+            $this->api_response = $client_exception;
+        } catch (BadResponseException $response_exception) {
+            $this->api_response = $response_exception;
+        }
+
+        return $this->api_response;
+    }
+
+    public function tokenStreamRequest($path)
+    {
+        $credentials = BaseMiddleware::getToken();
+        try {
+            $this->api_response = $this->client->get(
+                $this->api_address . $path, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $credentials
+                ],
+                'stream' => true,
+            ]);
+        } catch (ServerException $server_exception) {
+            $this->api_response = $server_exception;
+        } catch (ClientException $client_exception) {
+            $this->api_response = $client_exception;
+        } catch (BadResponseException $response_exception) {
+            $this->api_response = $response_exception;
+        }
+
+        return $this->api_response;
+    }
+
+    public function tokenDeleteRequest($path)
+    {
+        $credentials = BaseMiddleware::getToken();
+        try {
+            $this->api_response = $this->client->delete(
+                $this->api_address . $path, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $credentials
+                ],
             ]);
         } catch (ServerException $server_exception) {
             $this->api_response = $server_exception;

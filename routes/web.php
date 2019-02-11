@@ -24,7 +24,9 @@ $app->group("/auth", function () {
 });
 
 $app->group('/document', function () {
-    $this->get('',DocumentController::class . ':showAddForm')->setName('document.form');
+    $this->get('', DocumentController::class . ':showAddForm')->setName('document.form');
     $this->get('/{document_id}', DocumentController::class . ':requestDocument')->setName('document.details');
+    $this->get('/{document_id}/attachment', DocumentController::class . ':requestDocumentAttachment')->setName('document.download');
     $this->post('', DocumentController::class . ':addDocument')->setName('document.add');
+    $this->get('/{document_id}/delete', DocumentController::class. ':delete')->setName('delete');
 });

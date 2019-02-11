@@ -1,14 +1,32 @@
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Documento - {{ document.description }}</h6>
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Documento - {{ document.description }}</h6>
+        </div>
+        <div class="card-body">
+            <h4 class="small font-weight-bold">Descrição<span class="float-right">{{ document.description }}</span></h4>
+            <h4 class="small font-weight-bold">Tipo<span class="float-right">{{ document.type }}</span></h4>
+            <h4 class="small font-weight-bold">Situação de análise<span
+                        class="float-right">{{ document.notification }}</span></h4>
+            <h4 class="small font-weight-bold">Atualizado em<span class="float-right">{{ document.updated_at }}</span>
+            </h4>
+            <h4 class="small font-weight-bold">Criado em<span class="float-right">{{ document.created_at }}</span></h4>
+        </div>
     </div>
-    <div class="card-body">
-        <h4 class="small font-weight-bold">Descrição<span class="float-right">{{ document.description }}</span></h4>
-        <h4 class="small font-weight-bold">Tipo<span class="float-right">{{ document.type }}</span></h4>
-        <h4 class="small font-weight-bold">Validado<span class="float-right">{{ document.is_validated }}</span></h4>
-        <h4 class="small font-weight-bold">Situação de análise<span
-                    class="float-right">{{ document.notification }}</span></h4>
-        <h4 class="small font-weight-bold">Atualizado em<span class="float-right">{{ document.updated_at }}</span></h4>
-        <h4 class="small font-weight-bold">Criado em<span class="float-right">{{ document.created_at }}</span></h4>
+
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a class="text-center btn btn-primary btn-sm active"
+               href="{{ path_for('document.details', { 'document_id' : document.id}) }}">Download Anexo</a>
+            {% if document.validated == 1 %}
+                <a class="text-center btn btn-warning btn-sm disabled">Editar</a>
+                <a class="text-center btn btn-danger btn-sm disabled">Apagar</a>
+                {% else %}
+                    <a class="text-center btn btn-warning btn-sm active"
+                       href="{{ path_for('document.details', { 'document_id' : document.id}) }}">Editar</a>
+                    <a class="text-center btn btn-danger btn-sm active"
+                       href="{{ path_for('delete', { 'document_id' : document.id}) }}">Apagar</a>
+            {% endif %}
+        </div>
     </div>
 </div>
