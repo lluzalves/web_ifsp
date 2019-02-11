@@ -30,6 +30,7 @@ class DocumentController extends BaseController
                 }
             } else {
                 $_SESSION['anyDocuments'] = false;
+                return $response->withRedirect($this->router->pathFor('auth.signin'));
             }
         } else if ($result_code == 500) {
             $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";

@@ -97,6 +97,17 @@ class AuthController extends BaseController
         return $this->view->render($response, 'recover.twig');
     }
 
+    public function logout($request, $response)
+    {
+        session_destroy();
+        return $response->withRedirect($this->router->pathFor('home'));
+    }
+
+    public function terms($request, $response)
+    {
+        return $this->view->render($response, 'auth/terms.twig');
+    }
+
     public function sendRecoverUrlMail()
     {
 

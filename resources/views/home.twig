@@ -1,11 +1,12 @@
 {% extends "templates/app.twig" %}
 
 {% block title %}Home{% endblock %}
-
 {% block content %}
     {% if role == 'aluno' %}
         {% include 'templates/partials/student_dashboard.twig' %}
-    {% else %}
+    {% elseif role == 'admin' %}
         {% include 'templates/partials/admin_dashboard' %}
+    {% else %}
+        {% include 'auth/signin.twig' %}
     {% endif %}
 {% endblock %}

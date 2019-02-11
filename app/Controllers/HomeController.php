@@ -10,8 +10,9 @@ class HomeController extends BaseController
     {
         $this->view->getEnvironment()->addGlobal('email', $this->getEmail());
         $doc = new DocumentController($this->container);
-        $doc->requestDocuments($request, $response);
         if(BaseMiddleware::getToken()!=null) {
+            $doc->requestDocuments($request, $response);
+            sleep(3);
             return $this->view->render($response, 'home.twig');
         }else{
             return $response->withRedirect($this->router->pathFor('auth.signin'));

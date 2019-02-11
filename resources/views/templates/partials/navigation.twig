@@ -1,6 +1,6 @@
 <nav class="navbar-nav">
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark ">
-        <a class="navbar-brand" href="auth/login"><b>ifspdocs</b></a>
+        <a class="navbar-brand" href="{{ path_for('home') }}"><b>ifspdocs</b></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample03"
                 aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -26,22 +26,10 @@
                         </svg>
                         Adicionar Documento
                     </a>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                             stroke-linejoin="round" class="feather feather-layers">
-                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                            <polyline points="2 17 12 22 22 17"></polyline>
-                            <polyline points="2 12 12 17 22 12"></polyline>
-                        </svg>
-                        Documentos
-                    </a>
-                </li>
             </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="auth/login">Sair</a>
+                <a class="nav-link" href="{{ path_for('auth.logout') }}">Sair</a>
             </li>
             {% endif %}
             </ul>

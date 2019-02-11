@@ -10,7 +10,7 @@ $app->group('/', function () {
 
 $app->group("/auth", function () {
 
-    $this->get('/logout', AuthController::class . ':logout');
+    $this->get('/logout', AuthController::class . ':logout')->setName('auth.logout');
 
     $this->get('/login', AuthController::class . ':getSignIn')->setName('auth.signin');
     $this->post('/login', AuthController::class . ':postSignIn');
@@ -20,6 +20,9 @@ $app->group("/auth", function () {
 
     $this->get('/recover', AuthController::class . ':recoverCredentials')->setName('auth.recover');
     $this->post('/recover', AuthController::class . ':postSignInRecover');
+
+    $this->get('/terms', AuthController::class . ':terms')->setName('auth.terms');
+
 
 });
 
