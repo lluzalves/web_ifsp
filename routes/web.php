@@ -19,7 +19,7 @@ $app->group("/auth", function () {
     $this->post('/register', AuthController::class . ':postSignUp');
 
     $this->get('/recover', AuthController::class . ':recoverCredentials')->setName('auth.recover');
-    $this->post('/recover', AuthController::class . ':postSignInRecover');
+    $this->post('/recover', AuthController::class . ':restartCredentials');
 
     $this->get('/terms', AuthController::class . ':terms')->setName('auth.terms');
 

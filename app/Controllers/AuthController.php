@@ -108,9 +108,26 @@ class AuthController extends BaseController
         return $this->view->render($response, 'auth/terms.twig');
     }
 
-    public function sendRecoverUrlMail()
+    public function restartCredentials($request, $response)
     {
+        $path = "/recover";
+        $body = array(
+            'email' => $request->getParam('email')
+        );
+        $api_request = $this->requestWithBody($path, $body);
+        if (method_exists($api_request, 'getCode')) {
+            $result = $api_request->getCode();
+        } else {
+            $result = 200;
+        }
+        if ($result == 200) {
+            return $response->withRedirect($this->router->pathFor('auth.signin'));
+        } else if ($result == 500) {
+            $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
+        } else if ($result == 401) {
+            $_SESSION['result_error'] = "Não autorizado, tente novamente";
+        }
+        return $response->withRedirect($this->router->pathFor('auth.signup'));
 
     }
-
 }

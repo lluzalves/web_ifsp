@@ -40,6 +40,29 @@ abstract class BaseController
         return $api_request;
     }
 
+    public function requestWithBody($path, $body)
+    {
+        try {
+            $this->api_response = $this->client->post(
+                $this->api_address . $path, [
+                'multipart' => [
+                    [
+                        'Content-type' => 'multipart/form-data',
+                        'name' => 'email',
+                        'contents' => $body['email'],
+                    ]
+                ]
+            ]);
+        } catch (ServerException $server_exception) {
+            $this->api_response = $server_exception;
+        } catch (ClientException $client_exception) {
+            $this->api_response = $client_exception;
+        } catch (BadResponseException $response_exception) {
+            $this->api_response = $response_exception;
+        }
+        return $this->api_response;
+    }
+
     public function basicAuthRequest($body)
     {
 
@@ -202,7 +225,8 @@ abstract class BaseController
         try {
             $this->api_response = $this->client->post(
                 $this->api_address . $path, [
-                'form_params' => $body
+                'form-data' => [$body
+                ]
             ]);
         } catch (ServerException $server_exception) {
             $this->api_response = $server_exception;
