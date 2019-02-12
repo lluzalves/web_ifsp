@@ -28,15 +28,43 @@ class AuthController extends BaseController
         if ($validation->failed()) {
             return $response->withRedirect($this->router->pathFor('auth.signup'));
         }
+        $name = [
+            'Content-type' => 'multipart/form-data',
+            'name' => 'name',
+            'contents' => $request->getParam('name')
+        ];
 
-        $body = array(
-            'name' => $request->getParam('name'),
-            'email' => $request->getParam('email'),
-            'password' => $request->getParam('password'),
-            'prontuario' => $request->getParam('prontuario'),
-            'role' => 'aluno',
-            'profile_icon' => 'aluno_basic'
-        );
+        $email = [
+            'Content-type' => 'multipart/form-data',
+            'name' => 'email',
+            'contents' => $request->getParam('email')
+        ];
+
+        $password = [
+            'Content-type' => 'multipart/form-data',
+            'name' => 'password',
+            'contents' => $request->getParam('password')
+        ];
+
+        $prontuario = [
+            'Content-type' => 'multipart/form-data',
+            'name' => 'prontuario',
+            'contents' => $request->getParam('prontuario')
+        ];
+
+        $role = [
+            'Content-type' => 'multipart/form-data',
+            'name' => 'role',
+            'contents' => 'aluno'
+        ];
+
+        $profile_icon = [
+            'Content-type' => 'multipart/form-data',
+            'name' => 'profile_icon',
+            'contents' => 'aluno_basic'
+        ];
+
+        $body = array($name,$password,$email,$profile_icon,$prontuario,$role);
 
         $path = "/register";
         $api_request = $this->requestSignInPostWithParams($path, $body);
@@ -81,6 +109,7 @@ class AuthController extends BaseController
         } else {
             $result = $api_request->getMessage()['status'];
         }
+
         if ($result == 200) {
             $_SESSION['email'] = $request->getParam('email');
             $_SESSION['token'] = $api_response->token;

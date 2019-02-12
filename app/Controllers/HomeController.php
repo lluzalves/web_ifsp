@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+
 use App\Middleware\BaseMiddleware;
 
 class HomeController extends BaseController
@@ -10,11 +11,16 @@ class HomeController extends BaseController
     {
         $this->view->getEnvironment()->addGlobal('email', $this->getEmail());
         $doc = new DocumentController($this->container);
-        if(BaseMiddleware::getToken()!=null) {
-            $doc->requestDocuments($request, $response);
-            sleep(3);
+        $user = new UserController($this->container);
+        if (BaseMiddleware::getToken() != null) {
+            if ($_SESSION['role'] === 'aluno') {
+                $doc->requestDocuments($request, $response);
+            } else if ($_SESSION['role'] === 'admin') {
+                $user->requestUsers($request, $response);
+            }
+            sleep(2);
             return $this->view->render($response, 'home.twig');
-        }else{
+        } else {
             return $response->withRedirect($this->router->pathFor('auth.signin'));
         }
     }

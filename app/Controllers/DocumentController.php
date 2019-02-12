@@ -10,7 +10,12 @@ class DocumentController extends BaseController
 
     public function requestDocuments($request, $response)
     {
-        $path = "/documents";
+        if ($_SESSION['role'] == "admin") {
+            $path = "/documents/all";
+
+        } else {
+            $path = "/documents";
+        }
         $api_request = $this->tokenRequest($path);
 
         if (method_exists($api_request, 'getCode')) {

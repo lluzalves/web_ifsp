@@ -3,6 +3,7 @@
 use App\Controllers\DocumentController;
 use App\Controllers\HomeController;
 use \App\Controllers\AuthController;
+use App\Controllers\UserController;
 
 $app->group('/', function () {
     $this->get('', HomeController::class . ':index')->setName('home');
@@ -32,4 +33,8 @@ $app->group('/document', function () {
     $this->get('/{document_id}/attachment', DocumentController::class . ':requestDocumentAttachment')->setName('document.download');
     $this->post('', DocumentController::class . ':addDocument')->setName('document.add');
     $this->get('/{document_id}/delete', DocumentController::class. ':delete')->setName('delete');
+});
+
+$app->group('/users', function(){
+    $this->get('', UserController::class . ':requestUsers')->setName('users.all');
 });

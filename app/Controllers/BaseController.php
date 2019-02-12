@@ -222,11 +222,12 @@ abstract class BaseController
 
     public function requestSignInPostWithParams($path, $body)
     {
+
         try {
             $this->api_response = $this->client->post(
                 $this->api_address . $path, [
-                'form-data' => [$body
-                ]
+                'multipart' =>
+                    $body
             ]);
         } catch (ServerException $server_exception) {
             $this->api_response = $server_exception;
