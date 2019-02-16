@@ -25,8 +25,72 @@
                         </svg>
                         Adicionar Documento
                     </a>
+                </li>
+                <div class="btn-group">
+                    <li>
+                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="aquamarine" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            {% if anyNotifications.exists == true %}
+                            <span class="badge badge-alert badge-counter" aria-atomic="true"
+                                  style="color: aquamarine">notifications.length</span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <h4 class="dropdown-header">
+                                Central de notificações </h4>
+                            {% for notification in notifications %}
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-4">
+                                        {% if notification.type == 'atencao' %}
+                                            <div style="color: yellow; background-color: yellow">
+                                                " "
+                                            </div>
+                                        {% endif %}
+                                        {% if notification.type == 'sucesso' %}
+                                            <div style="color: greenyellow; background-color: greenyellow">
+                                                " "
+                                            </div>
+                                        {% endif %}
+                                        {% if notification.type == 'alerta' %}
+                                            <div style="color: red; background-color: red">
+                                                " "
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">{{ notification.created_at }}</div>
+                                        <span class="font-weight">{{ notification.body }}</span>
+                                    </div>
+                                </a>
+                                <div class="dropdown-divider"></div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="dropdown-menu">
+                            <h4 class="dropdown-item " style="color: black">Central de notificações </h4>
+                            {% if anyNotifications.exists == false %}
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-4">
+                                        <div style="color: aquamarine; background-color: aquamarine">
+                                            " "
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">{{ "now"|date("d/m/Y") }}</div>
+                                        <span class="font-weight">Por enquanto tudo tranquilo</span>
+                                    </div>
+                                </a>
+                                <div class="dropdown-divider"></div>
+                            {% endif %}
+                        </div>
+                    </li>
+                </div>
             </ul>
-            </li>
             {% endif %}
             {% if email %}
                 <li class="nav-item">

@@ -13,12 +13,13 @@ class HomeController extends BaseController
         $doc = new DocumentController($this->container);
         $user = new UserController($this->container);
         if (BaseMiddleware::getToken() != null) {
+            $notification = new NotificationController($this->container);
+            $notification->requestNotifications();
             if ($_SESSION['role'] === 'aluno') {
                 $doc->requestDocuments($request, $response);
             } else if ($_SESSION['role'] === 'admin') {
                 $user->requestUsers($request, $response);
             }
-            sleep(2);
             return $this->view->render($response, 'home.twig');
         } else {
             return $response->withRedirect($this->router->pathFor('auth.signin'));

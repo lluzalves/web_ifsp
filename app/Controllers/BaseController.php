@@ -5,8 +5,6 @@ namespace App\Controllers;
 use App\Middleware\BaseMiddleware;
 use Interop\Container\ContainerInterface;
 use GuzzleHttp\Client;
-use Slim\Http\UploadedFile;
-use Slim\Views\Twig as View;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\BadResponseException;
