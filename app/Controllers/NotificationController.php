@@ -24,12 +24,9 @@ class NotificationController extends BaseController
             if (property_exists(json_decode($result), 'notifications')) {
                 $notifications = json_decode($result)->notifications;
                 if (count($notifications) > 0) {
-                    $_SESSION['anyNotifications'] = array('exists' => true);
                     $_SESSION['notifications'] = $notifications;
                     $this->container->view->getEnvironment()->addGlobal('notifications', $_SESSION['notifications']);
                 }
-            } else {
-                $_SESSION['anyNotifications'] = array('exists' => false);
             }
         } else if ($result_code == 500) {
             $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
