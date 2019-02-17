@@ -32,9 +32,12 @@ $app->group('/document', function () {
     $this->get('/{document_id}', DocumentController::class . ':requestDocument')->setName('document.details');
     $this->get('/{document_id}/attachment', DocumentController::class . ':requestDocumentAttachment')->setName('document.download');
     $this->post('', DocumentController::class . ':addDocument')->setName('document.add');
-    $this->get('/{document_id}/delete', DocumentController::class. ':delete')->setName('delete');
+    $this->get('/{document_id}/delete', DocumentController::class . ':delete')->setName('delete');
 });
 
-$app->group('/users', function(){
+$app->group('/users', function () {
     $this->get('', UserController::class . ':requestUsers')->setName('users.all');
+    $this->get('/{email}', UserController::class . ':requestUserDetails')->setName('user.details');
+    $this->get('/{email}/attachments', UserController::class . ':requestUserAttachments')->setName('user.download');
+    $this->get('/{email}/delete', UserController::class . ':delete')->setName('user.delete');
 });

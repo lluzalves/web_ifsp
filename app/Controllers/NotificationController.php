@@ -10,7 +10,7 @@ class NotificationController extends BaseController
 
         $path = "/notifications";
 
-        $api_request = $this->tokenRequest($path);
+        $api_request = $this->tokenGetRequest($path);
 
         if (method_exists($api_request, 'getCode')) {
             $result = $api_request;

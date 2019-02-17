@@ -1,0 +1,146 @@
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Usuário - {{ user.name }}</h6>
+        </div>
+        <div class="card-body">
+            <h4 class="small font-weight-bold">Prontuário<span class="float-right">{{ user.prontuario }}</span></h4>
+            <h4 class="small font-weight-bold">Email<span class="float-right">{{ user.email }}</span></h4>
+            <h4 class="small font-weight-bold">Atualizado em<span class="float-right">{{ user.updated_at }}</span>
+            </h4>
+            <h4 class="small font-weight-bold">Criado em<span class="float-right">{{ user.created_at }}</span></h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a class="text-center btn btn-primary btn-sm active"
+               href="{{ path_for('user.download', { 'email' : user.email}) }}">Download pasta</a>
+            <a class="text-center btn btn-warning btn-sm active"
+               href="{{ path_for('user.details', { 'email' : user.email}) }}">Editar</a>
+            <a class="text-center btn btn-danger btn-sm active"
+               href="{{ path_for('user.delete', { 'email' : user.email}) }}">Apagar</a>
+        </div>
+    </div>
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h4 mb-0 text-gray-800">Documentos</h1>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                     height="24" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                </svg>
+                Tipo
+            </th>
+            <th scope="col">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="24" height="24"
+                     viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="16" x2="12" y2="12"/>
+                    <line x1="12" y1="8" x2="12" y2="8"/>
+                </svg>
+                Descrição
+            </th>
+            <th scope="col">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="24" height="24"
+                     viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                Criado em
+            </th>
+            <th scope="col">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                     height="24" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                Atualizado em
+            </th>
+            <th scope="col">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                     height="24" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                Validado
+            </th>
+            <th scope="col">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Anexo
+            </th>
+            <th scope="col">
+                <svg width="24" height="24" viewBox="0 0 24 24"
+                     xmlns="http://www.w3.org/2000/svg" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20h9"/>
+                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                </svg>
+                Ação
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            {% for document in documents %}
+            <th scope="row">{{ document.type }}</th>
+            <td>{{ document.description }}</td>
+            <td>{{ document.created_at }}</td>
+            <td>{{ document.updated_at }}</td>
+            <td>{% if document.is_validated == '0' %}
+                    Não
+                {% else %}
+                    Sim
+                {% endif %}
+            </td>
+            <td><a class="text-center btn btn-primary btn-sm active"
+                   href="{{ path_for('document.download', { 'document_id' : document.id}) }}">Download</a></td>
+            <td>
+                {% if document.is_validated == '0' %}
+                <a class="text-center btn btn-success btn-sm active"
+                   href="">Validar</a>
+                <a class="text-center btn btn-warning btn-sm active"
+                   href="{{ path_for('document.details', { 'document_id' : document.id}) }}">Editar</a>
+                <a class="text-center btn btn-danger btn-sm active"
+                   href="{{ path_for('delete', { 'document_id' : document.id}) }}">Apagar</a>
+            </td>
+        {% else %}
+            <a class="text-center btn btn-danger btn-sm active"
+               href="{{ path_for('delete', { 'document_id' : document.id}) }}">Apagar</a></td>
+            {% endif %}
+
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

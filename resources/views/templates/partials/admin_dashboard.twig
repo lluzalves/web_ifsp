@@ -29,7 +29,7 @@
         <div class="carousel-inner">
             {{ anyUser }}
             <div class="row">
-                {% if anyUser %}
+                {% if users|length < 1 %}
                     <div class="col-xl-3 col-md-6 mb-4">
                         <div class="card border-left-primary shadow h-100 py-2">
                             <div class="card-body">
@@ -46,7 +46,7 @@
                                     <p>{{ user.prontuario }}</p>
                                     <p>{{ user.updated_at }}</p>
                                     <a class="text-center btn btn-primary btn-sm active"
-                                       href="{{ path_for('users.all') }}"> + Detalhes</a>
+                                       href="{{ path_for('user.details', { 'email' : user.email}) }}"> + Detalhes</a>
                                 </div>
                             </div>
                         </div>

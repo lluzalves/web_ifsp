@@ -8,16 +8,16 @@ use Respect\Validation\Validator as v;
 class DocumentController extends BaseController
 {
 
-    public function requestDocuments($request, $response)
+    public function requestDocuments()
     {
+        $path = "/documents";
+
         if ($_SESSION['role'] == "admin") {
-            $path = "/documents/all";
-
+            $body = array('user_id' => $_SESSION['user']->id);
+            $api_request = $this->tokenGetRequestWithQuery($path, $body);
         } else {
-            $path = "/documents";
+            $api_request = $this->tokenGetRequest($path);
         }
-        $api_request = $this->tokenRequest($path);
-
         if (method_exists($api_request, 'getCode')) {
             $result = $api_request;
             $result_code = $result->getCode();
@@ -29,13 +29,9 @@ class DocumentController extends BaseController
             if (property_exists(json_decode($result), 'documents')) {
                 $documents = json_decode($result)->documents;
                 if (count($documents) > 0) {
-                    $_SESSION['anyDocuments'] = true;
                     $_SESSION['documents'] = $documents;
                     $this->container->view->getEnvironment()->addGlobal('documents', $_SESSION['documents']);
                 }
-            } else {
-                $_SESSION['anyDocuments'] = false;
-                return $response->withRedirect($this->router->pathFor('auth.signin'));
             }
         } else if ($result_code == 500) {
             $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
@@ -48,7 +44,7 @@ class DocumentController extends BaseController
     public function requestDocument($request, $response, $args)
     {
         $path = "/documents/" . $args['document_id'];
-        $api_request = $this->tokenRequest($path);
+        $api_request = $this->tokenGetRequest($path);
 
         if (method_exists($api_request, 'getCode')) {
             $result = $api_request;
@@ -90,38 +86,25 @@ class DocumentController extends BaseController
         }
 
         if ($result_code == 204) {
-            $attachment = $api_request->getBody();
-
             // need to figure out how to download file correctly, currently the download size is zero.
-            return $api_request->withHeader('Content-Description', 'File Transfer');
-            exit();
-            if ($attachment != null) {
-                $_SESSION['anyDocuments'] = true;
-                $_SESSION['document'] = $document;
-            } else {
-                $_SESSION['anyDocuments'] = false;
-            }
+            return $api_request->withHeader('Content-Type', 'application/download');
+
         } else if ($result_code == 500) {
             $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
         } else if ($result_code == 401) {
             $_SESSION['result_error'] = "Não autorizado";
         }
-
-        $this->container->view->getEnvironment()->addGlobal('document', $_SESSION['document']);
-        return $this->view->render($response, 'document/details.twig');
     }
 
     public function addDocument($request, $response)
     {
-        $path = "/documents";
-
         $files = $request->getUploadedFiles();
         $file = $files['file'];
         $filename = json_encode($files);
         $isFileAttacched = v::notBlank()->validate(json_decode($filename)->file);
 
         $user = new UserController($this->container);
-        $user->requestUser($_SESSION['email']);
+        $user->requestUser($_SESSION['email'], null);
 
         $type = ($_POST['type']);
 
@@ -143,11 +126,6 @@ class DocumentController extends BaseController
             'contents' => $request->getParam('description'),
         ];
 
-        $userId = [
-            'Content-type' => 'multipart/form-data',
-            'name' => 'user_id',
-            'contents' => $_SESSION['user'],
-        ];
         $type = [
             'Content-type' => 'multipart/form-data',
             'name' => 'type',
@@ -155,7 +133,7 @@ class DocumentController extends BaseController
         ];
 
         $path = "/documents";
-        $api_request = $this->multiPartTokenRequest($path, $description, $userId, $type, $file);
+        $api_request = $this->multiPartTokenRequest($path, $description, $user, $type, $file);
         if (method_exists($api_request, 'getCode')) {
             $result = $api_request->getCode();
         } else {

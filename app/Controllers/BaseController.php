@@ -83,7 +83,7 @@ abstract class BaseController
         return $this->api_response;
     }
 
-    public function tokenRequest($path)
+    public function tokenGetRequest($path)
     {
         $credentials = BaseMiddleware::getToken();
         try {
@@ -91,6 +91,30 @@ abstract class BaseController
                 $this->api_address . $path, [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $credentials
+                ]
+            ]);
+        } catch (ServerException $server_exception) {
+            $this->api_response = $server_exception;
+        } catch (ClientException $client_exception) {
+            $this->api_response = $client_exception;
+        } catch (BadResponseException $response_exception) {
+            $this->api_response = $response_exception;
+        }
+
+        return $this->api_response;
+    }
+
+    public function tokenGetRequestWithQuery($path, $body)
+    {
+        $credentials = BaseMiddleware::getToken();
+        try {
+            $this->api_response = $this->client->get(
+                $this->api_address . $path, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $credentials
+                ],
+                'query' => [$body
+
                 ]
             ]);
         } catch (ServerException $server_exception) {
@@ -113,7 +137,6 @@ abstract class BaseController
                 'headers' => [
                     'Authorization' => 'Bearer ' . $credentials
                 ],
-                'stream' => true,
             ]);
         } catch (ServerException $server_exception) {
             $this->api_response = $server_exception;
@@ -173,14 +196,14 @@ abstract class BaseController
     }
 
 
-    public function multiPartTokenRequest($path, $description, $userId, $type, $file)
+    public function multiPartTokenRequest($path, $description, $user, $type, $file)
     {
 
         if ($file->getError() === UPLOAD_ERR_OK) {
             $extension = pathinfo($file->getClientFileName(), PATHINFO_EXTENSION);
             $baseName = bin2hex(random_bytes(8));
             $filename = sprintf("%s.%0.8s", $baseName, $extension);
-            $directory = 'upload' . DIRECTORY_SEPARATOR . $_SESSION['prontuario'];
+            $directory = 'upload' . DIRECTORY_SEPARATOR . $user->prontuario;
             mkdir($directory, 0700, true);
             $uploadedFilePath = $directory . DIRECTORY_SEPARATOR . $filename;
             $file->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
@@ -200,7 +223,11 @@ abstract class BaseController
                         'contents' => fopen($uploadedFilePath, 'r'),
                     ],
                     $description,
-                    $userId,
+                    [
+                        'Content-type' => 'multipart/form-data',
+                        'name' => 'user_id',
+                        'contents' => $user->id,
+                    ],
                     $type
                 ]
             ]);

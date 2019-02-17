@@ -16,9 +16,9 @@ class HomeController extends BaseController
             $notification = new NotificationController($this->container);
             $notification->requestNotifications();
             if ($_SESSION['role'] === 'aluno') {
-                $doc->requestDocuments($request, $response);
+                $doc->requestDocuments();
             } else if ($_SESSION['role'] === 'admin') {
-                $user->requestUsers($request, $response);
+                $user->requestUsers();
             }
             return $this->view->render($response, 'home.twig');
         } else {

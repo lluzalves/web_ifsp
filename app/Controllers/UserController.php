@@ -6,10 +6,13 @@ namespace App\Controllers;
 class UserController extends BaseController
 {
 
-    public function requestUser($email)
+    public function requestUser($email, $path)
     {
-        $path = "/user/" . $email;
-        $api_request = $this->tokenRequest($path);
+        if ($path == null) {
+            $path = "/user/" . $email;
+        }
+
+        $api_request = $this->tokenGetRequest($path);
         if (method_exists($api_request, 'getCode')) {
             $result = $api_request;
             $result_code = $result->getCode();
@@ -17,14 +20,13 @@ class UserController extends BaseController
             $result = $api_request->getBody()->getContents();
             $result_code = json_decode($result)->code;
         }
+
         if ($result_code == 200) {
             $user = json_decode($result)->user;
+
             if ($user != null) {
-                $_SESSION['user'] = true;
-                $_SESSION['user'] = $user->id;
-                $_SESSION['prontuario'] = $user->prontuario;
-            } else {
-                $_SESSION['user'] = false;
+                $this->container->view->getEnvironment()->addGlobal('user', $user);
+                $_SESSION['user'] = $user;
             }
         } else if ($result_code == 500) {
             $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
@@ -34,11 +36,24 @@ class UserController extends BaseController
 
     }
 
-    public function requestUsers($request, $response)
+    public function requestUserDetails($request, $response, $args)
+    {
+        $email = $args['email'];
+        $path = "/user/" . $email;
+        $this->requestUser($email, $path);
+        if (isset($_SESSION['user'])) {
+            $docs = new DocumentController($this->container);
+            $docs->requestDocuments();
+            return $this->view->render($response, 'user/details.twig');
+        }
+    }
+
+
+    public function requestUsers()
     {
         $path = "/user/all";
 
-        $api_request = $this->tokenRequest($path);
+        $api_request = $this->tokenGetRequest($path);
 
         if (method_exists($api_request, 'getCode')) {
             $result = $api_request;
@@ -66,4 +81,5 @@ class UserController extends BaseController
             $_SESSION['result_error'] = "Não autorizado";
         }
     }
+
 }
