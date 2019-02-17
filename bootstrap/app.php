@@ -1,4 +1,7 @@
 <?php
+
+use App\Middleware\BaseMiddleware;
+
 session_start();
 require __DIR__ . '/../vendor/autoload.php';
 $app = new \Slim\App([
@@ -40,10 +43,19 @@ $container['AuthController'] = function ($container) {
     return new \App\Controllers\AuthController($container);
 };
 
+$container['DocumentController'] = function ($container) {
+    return new \App\Controllers\DocumentController($container);
+};
+
+$container['UserController'] = function ($container) {
+    return new \App\Controllers\UserController($container);
+};
+
+$container['NotificationController'] = function ($container) {
+    return new \App\Controllers\NotificationController($container);
+};
+
 $app->add(new \App\Middleware\BaseMiddleware($container));
 $app->add(new \App\Middleware\ValidationErrors($container));
-$app->add(new \App\Middleware\PersistInput($container));
-$app->add(new \App\Middleware\DocumentData($container));
-$app->add(new \App\Middleware\UserData($container));
 
 require __DIR__ . '/../routes/web.php';

@@ -98,42 +98,93 @@ class DocumentController extends BaseController
 
     public function addDocument($request, $response)
     {
+
         $files = $request->getUploadedFiles();
         $file = $files['file'];
         $filename = json_encode($files);
-        $isFileAttacched = v::notBlank()->validate(json_decode($filename)->file);
+        $isFileAttached = v::notBlank()->validate(json_decode($filename)->file);
 
-        $user = new UserController($this->container);
-        $user->requestUser($_SESSION['email'], null);
-
+        $requestUser = new UserController($this->container);
+        $requestUser->requestUser($_SESSION['email'], null);
+        $user = $_SESSION['user'];
         $type = ($_POST['type']);
 
         $validation = $this->validator->validate($request, [
             'description' => v::notBlank(),
         ]);
 
-        if (!$isFileAttacched) {
+        if (!$isFileAttached) {
             $_SESSION['file'] = null;
             $this->container->view->getEnvironment()->addGlobal('file', $_SESSION['file']);
         }
-        if ($validation->failed() || !$isFileAttacched) {
-            return $response->withRedirect($this->router->pathFor('document.add'));
+        if ($validation->failed() || !$isFileAttached) {
+            $_SESSION['result_error'] = $validation;
+            unset($_SESSION['user_id']);
+            unset($_SESSION['document']);
         }
 
-        $description = [
-            'Content-type' => 'multipart/form-data',
-            'name' => 'description',
-            'contents' => $request->getParam('description'),
-        ];
+        if (isset($_SESSION['document']) && isset($_SESSION['user_id'])) {
+            $body = [
+                [
+                    'Content-type' => 'multipart/form-data',
+                    'name' => 'id',
+                    'contents' => $_SESSION['document']->id,
+                ],
+                [
+                    'Content-type' => 'multipart/form-data',
+                    'name' => 'user_id',
+                    'contents' => $_SESSION['user_id'],
+                ],
+                [
+                    'Content-type' => 'multipart/form-data',
+                    'name' => 'description',
+                    'contents' => $request->getParam('description'),
+                ],
 
-        $type = [
-            'Content-type' => 'multipart/form-data',
-            'name' => 'type',
-            'contents' => $type,
-        ];
+                [
+                    'Content-type' => 'multipart/form-data',
+                    'name' => 'type',
+                    'contents' => $type,
+                ]
+            ];
+            $path = "/documents/upsert";
+        } elseif (!isset($_SESSION['document']) && isset($_SESSION['user_id'])) {
+            $body = [
+                [
+                    'Content-type' => 'multipart/form-data',
+                    'name' => 'user_id',
+                    'contents' => $_SESSION['user_id'],
+                ],
+                [
+                    'Content-type' => 'multipart/form-data',
+                    'name' => 'description',
+                    'contents' => $request->getParam('description'),
+                ],
 
-        $path = "/documents";
-        $api_request = $this->multiPartTokenRequest($path, $description, $user, $type, $file);
+                [
+                    'Content-type' => 'multipart/form-data',
+                    'name' => 'type',
+                    'contents' => $type,
+                ]
+            ];
+            $path = "/documents/upsert";
+        } else {
+            $body = [
+                [
+                    'Content-type' => 'multipart/form-data',
+                    'name' => 'description',
+                    'contents' => $request->getParam('description'),
+                ],
+
+                [
+                    'Content-type' => 'multipart/form-data',
+                    'name' => 'type',
+                    'contents' => $type,
+                ]
+            ];
+            $path = "/documents";
+        }
+        $api_request = $this->multiPartTokenRequest($path, $body, $user, $file);
         if (method_exists($api_request, 'getCode')) {
             $result = $api_request->getCode();
         } else {
@@ -141,6 +192,8 @@ class DocumentController extends BaseController
         }
 
         if ($result == 200) {
+            unset($_SESSION['user_id']);
+            unset($_SESSION['document']);
             return $response->withRedirect($this->router->pathFor('home'));
         } else if ($result == 500) {
             $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
@@ -169,8 +222,24 @@ class DocumentController extends BaseController
         }
     }
 
-    public
-    function showAddForm($request, $response)
+    public function updateSessionDocument($request, $response, $args)
+    {
+        foreach ($_SESSION['documents'] as $document) {
+            if ($document->id = $args['document_id'])
+                $_SESSION['document'] = $document;
+            $this->container->view->getEnvironment()->addGlobal('document', $document);
+            break;
+        }
+        $this->showAddForm($request, $response);
+    }
+
+    public function updateSessionUserId($request, $response, $args)
+    {
+        $_SESSION['user_id'] = $args['user_id'];
+        $this->showAddForm($request, $response);
+    }
+
+    public function showAddForm($request, $response)
     {
         return $this->view->render($response, 'document/add.twig');
     }

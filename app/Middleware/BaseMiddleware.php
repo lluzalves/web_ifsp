@@ -21,6 +21,14 @@ class BaseMiddleware
             $this->container->view->getEnvironment()->addGlobal('role', $_SESSION['role']);
         }
 
+        $requestedUri = $request->getServerParams()['REQUEST_URI'];
+        if (strpos($requestedUri, '/web_ifsp/public/document') !== false ||
+            strpos($requestedUri, '/web_ifsp/public/users') !== false) {
+            if ($this->getToken() == null) {
+                return $response->withRedirect($this->container->router->pathFor('auth.signin'));
+            }
+        }
+
         $response = $next($request, $response);
         return $response;
     }
@@ -32,6 +40,14 @@ class BaseMiddleware
         } else
             return null;
 
+    }
+
+    public function checkToken()
+    {
+        if (isset($_SESSION['token']) && array_key_exists('token', $_SESSION)) {
+            return $_SESSION['token'];
+        } else
+            return null;
     }
 
 }

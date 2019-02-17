@@ -4,15 +4,20 @@
             <div class="myform form col-md-16">
                 <div class="logo mb-3">
                     <div class="col-md-12 text-center">
-                        <h1>Adicionar</h1>
+                        {% if document %}
+                            <h1>Editar</h1>
+                        {% else %}
+                            <h1>Adicionar</h1>
+                        {% endif %}
                     </div>
                 </div>
-                <form action="{{ path_for('document.add')}}" name="addDocument" method="post" enctype="multipart/form-data">
+                <form action="{{ path_for('document.add') }}" name="addDocument" method="post"
+                      enctype="multipart/form-data">
 
                     <div class="form-group  {{ errors.description }} ? 'has-error' : '' }}">
                         <label>Descrição</label>
                         <input type="text" name="description" class="form-control" id="description"
-                               placeholder="Informações sobre o documento" value="{{ oldData.description }}">
+                               placeholder="Informações sobre o documento" value="{{ document.description }}">
                         {% if errors.description %}
                             <span class="help-block" style="color:crimson">Esse campo não pode ser vazio</span>
                         {% endif %}
@@ -21,21 +26,46 @@
                     <div class="form-group">
                         <label>Tipo</label>
                         <select name="type" class="form-control">
-                            <option selected>Cpf</option>
-                            <option>Comprovante de Moradia</option>
-                            <option>Comprovante de Aluguel</option>
-                            <option>Comprovante de Matrícula</option>
-                            <option>Atestado Médico</option>
-                            <option>Carteira de Trabalho</option>
-                            <option>Historico Escolar</option>
-                            <option>Outro</option>
+                            <option {% if (document.type == 'Cpf') or (document == null) %}
+                            selected
+                                    {% endif %}>
+                                Cpf
+                            </option>
+                            <option{% if document.type == 'Comprovante de Moradia' %}
+                            selected
+                                    {% endif %}>Comprovante de Moradia
+                            </option>
+                            <option{% if document.type == 'Comprovante de Aluguel' %}
+                            selected
+                                    {% endif %}>Comprovante de Aluguel
+                            </option>
+                            <option{% if document.type == 'Comprovante de Matrícula' %}
+                            selected
+                                    {% endif %}>Comprovante de Matrícula
+                            </option>
+                            <option{% if document.type == 'Atestado Médico' %}
+                            selected
+                                    {% endif %}>Atestado Médico
+                            </option>
+                            <option{% if document.type == 'Carteira de Trabalho' %}
+                            selected
+                                    {% endif %}>Carteira de Trabalho
+                            </option>
+                            <option{% if document.type == 'Historico Escolar' %}
+                            selected
+                                    {% endif %}>Historico Escolar
+                            </option>
+                            <option{% if document.type == 'Outro' %}
+                            selected
+                                    {% endif %}>Outro
+                            </option>
                         </select>
                     </div>
 
                     <div class="form-group  {{ errors.file }}? 'has-error' : '' }}">
                         <label>Arquivo</label>
-                        <input type="file" name="file" id="file"  accept="image/*"
-                               placeholder="Insira arquivo" value="{{ oldData.file }}">
+                        <input type="file" name="file" id="file" accept="image/*"
+                               placeholder="Insira um arquivo">
                         {% if file == null %}
                             <span class="help-block" style="color:crimson"><p>Por favor insira um arquivo</p></span>
                         {% endif %}

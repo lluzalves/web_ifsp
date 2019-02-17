@@ -196,7 +196,7 @@ abstract class BaseController
     }
 
 
-    public function multiPartTokenRequest($path, $description, $user, $type, $file)
+    public function multiPartTokenRequest($path, $body, $user, $file)
     {
 
         if ($file->getError() === UPLOAD_ERR_OK) {
@@ -208,6 +208,12 @@ abstract class BaseController
             $uploadedFilePath = $directory . DIRECTORY_SEPARATOR . $filename;
             $file->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
         }
+        $filecontent = [
+            'Content-type' => 'multipart/form-data',
+            'name' => 'file',
+            'contents' => fopen($uploadedFilePath, 'r'),
+        ];
+        array_push($body, $filecontent);
 
         $credentials = BaseMiddleware::getToken();
         try {
@@ -216,20 +222,7 @@ abstract class BaseController
                 'headers' => [
                     'Authorization' => 'Bearer ' . $credentials
                 ],
-                'multipart' => [
-                    [
-                        'Content-type' => 'multipart/form-data',
-                        'name' => 'file',
-                        'contents' => fopen($uploadedFilePath, 'r'),
-                    ],
-                    $description,
-                    [
-                        'Content-type' => 'multipart/form-data',
-                        'name' => 'user_id',
-                        'contents' => $user->id,
-                    ],
-                    $type
-                ]
+                'multipart' => $body
             ]);
         } catch (ServerException $server_exception) {
             $this->api_response = $server_exception;

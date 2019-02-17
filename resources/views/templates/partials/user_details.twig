@@ -13,7 +13,9 @@
     </div>
 
     <div class="row">
-        <div class="col-xl-3 col-md-6 mb-4">
+        <div class="col-xl-4 col-md-6 mb-4">
+            <a class="text-center btn btn-info btn-sm active"
+               href="{{ path_for('user.notify', { 'email' : user.email}) }}">Enviar mensagem</a>
             <a class="text-center btn btn-primary btn-sm active"
                href="{{ path_for('user.download', { 'email' : user.email}) }}">Download pasta</a>
             <a class="text-center btn btn-warning btn-sm active"
@@ -25,8 +27,10 @@
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h4 mb-0 text-gray-800">Documentos</h1>
+        <a class="text-center btn btn-primary btn-sm active"
+           href="{{ path_for('documentbyadmin.add', { 'user_id' : user.id}) }}">Adicionar documento</a>
     </div>
-    <table class="table table-striped">
+    <table class="table table-striped table-responsive-md">
         <thead>
         <tr>
             <th scope="col">
@@ -114,7 +118,7 @@
         <tr>
             {% for document in documents %}
             <th scope="row">{{ document.type }}</th>
-            <td>{{ document.description }}</td>
+            <td class="col col-lg-2">{{ document.description }}</td>
             <td>{{ document.created_at }}</td>
             <td>{{ document.updated_at }}</td>
             <td>{% if document.is_validated == '0' %}
@@ -130,7 +134,7 @@
                 <a class="text-center btn btn-success btn-sm active"
                    href="">Validar</a>
                 <a class="text-center btn btn-warning btn-sm active"
-                   href="{{ path_for('document.details', { 'document_id' : document.id}) }}">Editar</a>
+                   href="{{ path_for('document.edit', { 'user_id' : user.id,'document_id' : document.id,}) }}">Editar</a>
                 <a class="text-center btn btn-danger btn-sm active"
                    href="{{ path_for('delete', { 'document_id' : document.id}) }}">Apagar</a>
             </td>
