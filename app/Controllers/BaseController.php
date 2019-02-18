@@ -137,6 +137,7 @@ abstract class BaseController
                 'headers' => [
                     'Authorization' => 'Bearer ' . $credentials
                 ],
+                'stream' => true,
             ]);
         } catch (ServerException $server_exception) {
             $this->api_response = $server_exception;

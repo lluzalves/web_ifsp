@@ -81,7 +81,7 @@ class DocumentController extends BaseController
             $result = $api_request;
             $result_code = $result->getCode();
         } else {
-            $result = $api_request->getBody()->getContents();
+            return $api_request->withHeader('Content-Type', 'application/download');
             $result_code = json_decode($result)->code;
         }
 
