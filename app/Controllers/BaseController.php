@@ -193,6 +193,8 @@ abstract class BaseController
             $this->api_response = $response_exception;
         }
 
+        var_dump($this->api_response->getBody()->read(1000));
+        exit();
         return $this->api_response;
     }
 

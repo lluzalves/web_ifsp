@@ -16,10 +16,6 @@
         <div class="col-xl-4 col-md-6 mb-4">
             <a class="text-center btn btn-info btn-sm active"
                href="{{ path_for('user.notify', { 'email' : user.email}) }}">Enviar mensagem</a>
-            <a class="text-center btn btn-primary btn-sm active"
-               href="{{ path_for('user.download', { 'email' : user.email}) }}">Download pasta</a>
-            <a class="text-center btn btn-warning btn-sm active"
-               href="{{ path_for('user.details', { 'email' : user.email}) }}">Editar</a>
             <a class="text-center btn btn-danger btn-sm active"
                href="{{ path_for('user.delete', { 'email' : user.email}) }}">Apagar</a>
         </div>
@@ -122,17 +118,17 @@
             <td>{{ document.created_at }}</td>
             <td>{{ document.updated_at }}</td>
             <td>{% if document.is_validated == '0' %}
-                    Não
+                    <a class="text-center btn btn-success btn-sm active"
+                       href="{{ path_for('document.validate', {'document_id' : document.id}) }}">Validar</a>
                 {% else %}
-                    Sim
+                    <a class="text-center btn btn-secondary btn-sm disable"
+                       href="">Validado</a>
                 {% endif %}
             </td>
             <td><a class="text-center btn btn-primary btn-sm active"
                    href="{{ path_for('document.download', { 'document_id' : document.id}) }}">Download</a></td>
             <td>
                 {% if document.is_validated == '0' %}
-                <a class="text-center btn btn-success btn-sm active"
-                   href="">Validar</a>
                 <a class="text-center btn btn-warning btn-sm active"
                    href="{{ path_for('document.edit', { 'user_id' : user.id,'document_id' : document.id,}) }}">Editar</a>
                 <a class="text-center btn btn-danger btn-sm active"

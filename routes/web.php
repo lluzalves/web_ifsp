@@ -30,6 +30,7 @@ $app->group('/document', function () {
     $this->get('/{document_id}', DocumentController::class . ':requestDocument')->setName('document.details');
     $this->get('/{document_id}/attachment', DocumentController::class . ':requestDocumentAttachment')->setName('document.download');
     $this->post('', DocumentController::class . ':addDocument')->setName('document.add');
+    $this->get('/validate/{document_id}', DocumentController::class . ':validateDocument')->setName('document.validate');
     $this->get('{user_id}/{document_id}/edit', DocumentController::class . ':updateSessionDocument')->setName('document.edit');
     $this->get('/user/{user_id}', DocumentController::class . ':updateSessionUserId')->setName('documentbyadmin.add');
     $this->get('/{document_id}/delete', DocumentController::class . ':delete')->setName('delete');

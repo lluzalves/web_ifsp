@@ -38,7 +38,6 @@ class DocumentController extends BaseController
         } else if ($result_code == 401) {
             $_SESSION['result_error'] = "Não autorizado";
         }
-
     }
 
     public function requestDocument($request, $response, $args)
@@ -77,23 +76,7 @@ class DocumentController extends BaseController
     {
         $path = "/documents/" . $args['document_id'] . '/attachment';
         $api_request = $this->tokenStreamRequest($path);
-        if (method_exists($api_request, 'getCode')) {
-            $result = $api_request;
-            $result_code = $result->getCode();
-        } else {
-            return $api_request->withHeader('Content-Type', 'application/download');
-            $result_code = json_decode($result)->code;
-        }
-
-        if ($result_code == 204) {
-            // need to figure out how to download file correctly, currently the download size is zero.
-            return $api_request->withHeader('Content-Type', 'application/download');
-
-        } else if ($result_code == 500) {
-            $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
-        } else if ($result_code == 401) {
-            $_SESSION['result_error'] = "Não autorizado";
-        }
+        return $api_request->withHeader('Content-Type', 'application/download');
     }
 
     public function addDocument($request, $response)
@@ -242,6 +225,36 @@ class DocumentController extends BaseController
     public function showAddForm($request, $response)
     {
         return $this->view->render($response, 'document/add.twig');
+    }
+
+    public function validateDocument($resquest, $response, $args)
+    {
+        $path = "/documents/validate/" . $args['document_id'];
+        if ($_SESSION['role'] == "admin") {
+            $body = array('document_id' => $args['document_id'],
+                'is_validated' => true);
+            $api_request = $this->postTokenRequest($path, $body);
+            if (method_exists($api_request, 'getCode')) {
+                $result = $api_request;
+                $result_code = $result->getCode();
+            } else {
+                $result = $api_request->getBody()->getContents();
+                $result_code = json_decode($result)->code;
+            }
+            if ($result_code == 204) {
+                if (property_exists(json_decode($result), 'documents')) {
+                    $documents = json_decode($result)->documents;
+                    if (count($documents) > 0) {
+                        $_SESSION['documents'] = $documents;
+                        $this->container->view->getEnvironment()->addGlobal('documents', $_SESSION['documents']);
+                    }
+                }
+            } else if ($result_code == 500) {
+                $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
+            } else if ($result_code == 401) {
+                $_SESSION['result_error'] = "Não autorizado";
+            }
+        }
     }
 
 }
