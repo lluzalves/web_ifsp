@@ -208,10 +208,12 @@ class DocumentController extends BaseController
     public function updateSessionDocument($request, $response, $args)
     {
         foreach ($_SESSION['documents'] as $document) {
-            if ($document->id = $args['document_id'])
+            if ($document->id = $args['document_id']) {
                 $_SESSION['document'] = $document;
-            $this->container->view->getEnvironment()->addGlobal('document', $document);
-            break;
+                $_SESSION['user_id'] = $document->user_id;
+                $this->container->view->getEnvironment()->addGlobal('document', $document);
+                break;
+            }
         }
         $this->showAddForm($request, $response);
     }
