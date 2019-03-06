@@ -173,7 +173,6 @@ abstract class BaseController
 
     public function postTokenRequest($path, $data)
     {
-
         $credentials = BaseMiddleware::getToken();
         try {
             $this->api_response = $this->client->post(
@@ -181,9 +180,8 @@ abstract class BaseController
                 'headers' => [
                     'Authorization' => 'Bearer ' . $credentials
                 ],
-                'form-data' => [$data
+                'multipart' => $data
 
-                ]
             ]);
         } catch (ServerException $server_exception) {
             $this->api_response = $server_exception;
@@ -193,8 +191,7 @@ abstract class BaseController
             $this->api_response = $response_exception;
         }
 
-        var_dump($this->api_response->getBody()->read(1000));
-        exit();
+
         return $this->api_response;
     }
 

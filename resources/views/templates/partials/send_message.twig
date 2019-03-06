@@ -7,7 +7,8 @@
                         <h1>Enviar mensagem</h1>
                     </div>
                 </div>
-                <form action="" name="addMessage" method="post">
+                <form action="{{ path_for('notification.create') }}" name="addMessage"
+                      method="post">
 
                     <div class="form-group  {{ errors.subject }} ? 'has-error' : '' }}">
                         <label>Assunto</label>
@@ -20,7 +21,7 @@
 
                     <div class="form-group  {{ errors.body }} ? 'has-error' : '' }}">
                         <label>Mensagem</label>
-                        <textarea class="form-control" name="subject" id="subject" rows="3"
+                        <textarea class="form-control" name="body" id="body" rows="3"
                                   placeholder="Digite a mensagem"></textarea>
                         {% if errors.body %}
                             <span class="help-block" style="color:crimson">Esse campo não pode ser vazio</span>

@@ -2,9 +2,6 @@
 
 namespace App\Controllers;
 
-use Respect\Validation\Validator as v;
-
-
 class UserController extends BaseController
 {
 
@@ -87,34 +84,6 @@ class UserController extends BaseController
     public function notify($request, $response)
     {
         return $this->view->render($response, 'message/add.twig');
-    }
-
-    public function sendMessage($request, $response)
-    {
-        $validation = $this->validator->validate($request, [
-            'subject' => v::notEmpty(),
-            'body' => v::notEmpty(),
-        ]);
-
-
-        $message = array(
-            'subject' => $request->getParam('subject'),
-            'body' => $request->getParam('body')
-        );
-        $api_request = $this->postTokenRequest($message);
-        if (method_exists($api_request, 'getBody')) {
-            $api_response = json_decode($api_request->getBody()->getContents());
-            $result = $api_response->code;
-        } else {
-            $result = $api_request->getMessage()['status'];
-        }
-
-        if ($result == 200) {
-            return $response->withRedirect($this->router->pathFor('home'));
-        } else {
-            $_SESSION['result_error'] = "Não autorizado, verifique as credenciais";
-            return $response->withRedirect($this->router->pathFor('auth.signin'));
-        }
     }
 
 }

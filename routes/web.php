@@ -3,6 +3,7 @@
 use App\Controllers\DocumentController;
 use App\Controllers\HomeController;
 use \App\Controllers\AuthController;
+use App\Controllers\NotificationController;
 use App\Controllers\UserController;
 
 $app->group('/', function () {
@@ -41,5 +42,9 @@ $app->group('/users', function () {
     $this->get('/{email}', UserController::class . ':requestUserDetails')->setName('user.details');
     $this->get('/{email}/attachments', UserController::class . ':requestUserAttachments')->setName('user.download');
     $this->get('/{email}/delete', UserController::class . ':delete')->setName('user.delete');
-    $this->get('/{email}/notify', UserController::class . ':notify')->setName('user.notify');
+    $this->get('/{user_id}/notify', UserController::class . ':notify')->setName('user.notify');
+});
+
+$app->group('/notification', function () {
+    $this->post('/sendnotification', NotificationController::class . ':sendNotification')->setName('notification.create');
 });

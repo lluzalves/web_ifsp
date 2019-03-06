@@ -15,7 +15,7 @@
     <div class="row">
         <div class="col-xl-4 col-md-6 mb-4">
             <a class="text-center btn btn-info btn-sm active"
-               href="{{ path_for('user.notify', { 'email' : user.email}) }}">Enviar mensagem</a>
+               href="{{ path_for('user.notify', { 'user_id' : user.id}) }}">Enviar mensagem</a>
             <a class="text-center btn btn-danger btn-sm active"
                href="{{ path_for('user.delete', { 'email' : user.email}) }}">Apagar</a>
         </div>
