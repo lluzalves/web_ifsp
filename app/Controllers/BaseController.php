@@ -18,7 +18,7 @@ abstract class BaseController
     protected $router;
     protected $validator;
     protected $api_response;
-    protected $api_address = 'http://192.168.0.22/slim_app/public';
+    protected $api_address = 'http://192.168.0.15/slim_app/public';
 
     public function __construct(ContainerInterface $container)
     {
