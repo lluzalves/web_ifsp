@@ -37,7 +37,11 @@ class UserController extends BaseController
 
     public function requestUserDetails($request, $response, $args)
     {
-        $email = $args['email'];
+        if (isset($args['email'])) {
+            $email = $args['email'];
+        } else {
+            $email = $_SESSION['user']->email;
+        }
         $path = "/user/" . $email;
         $this->requestUser($email, $path);
         if (isset($_SESSION['user'])) {

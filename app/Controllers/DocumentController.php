@@ -232,28 +232,40 @@ class DocumentController extends BaseController
     public function validateDocument($resquest, $response, $args)
     {
         $path = "/documents/validate/" . $args['document_id'];
+
         if ($_SESSION['role'] == "admin") {
-            $body = array('document_id' => $args['document_id'],
-                'is_validated' => true);
+
+
+            $body = [
+                [
+                    'Content-type' => 'multipart/form-data',
+                    'name' => 'document_id',
+                    'contents' => $args['document_id'],
+                ],
+
+                [
+                    'Content-type' => 'multipart/form-data',
+                    'name' => 'is_validated',
+                    'contents' => true,
+                ]
+            ];
+
+
             $api_request = $this->postTokenRequest($path, $body);
-            if (method_exists($api_request, 'getCode')) {
-                $result = $api_request;
-                $result_code = $result->getCode();
-            } else {
-                $result = $api_request->getBody()->getContents();
-                $result_code = json_decode($result)->code;
+
+            if (method_exists($api_request, 'getBody')) {
+                $api_response = json_decode($api_request->getBody()->getContents());
+                $result = $api_response->code;
+            } else {;
+                $result = $api_request->getMessage()['status'];
             }
-            if ($result_code == 204) {
-                if (property_exists(json_decode($result), 'documents')) {
-                    $documents = json_decode($result)->documents;
-                    if (count($documents) > 0) {
-                        $_SESSION['documents'] = $documents;
-                        $this->container->view->getEnvironment()->addGlobal('documents', $_SESSION['documents']);
-                    }
-                }
-            } else if ($result_code == 500) {
+
+            if ($result == 204) {
+                $user_controller = new UserController($this->container);
+                return $user_controller->requestUserDetails($response,$response,$args);
+            } else if ($result == 500) {
                 $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
-            } else if ($result_code == 401) {
+            } else if ($result == 401) {
                 $_SESSION['result_error'] = "Não autorizado";
             }
         }
