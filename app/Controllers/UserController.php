@@ -5,12 +5,18 @@ namespace App\Controllers;
 class UserController extends BaseController
 {
 
-    public function requestUser($email, $path)
+    public function requestUserByEmail($email, $path)
     {
         if ($path == null) {
-            $path = "/user/" . $email;
+            $this->requestUser("/user/" . $email);
+        } else {
+            $this->requestUser($path);
         }
 
+    }
+
+    public function requestUser($path)
+    {
         $api_request = $this->tokenGetRequest($path);
         if (method_exists($api_request, 'getCode')) {
             $result = $api_request;
@@ -32,7 +38,6 @@ class UserController extends BaseController
         } else if ($result_code == 401) {
             $_SESSION['result_error'] = "Não autorizado";
         }
-
     }
 
     public function requestUserDetails($request, $response, $args)
@@ -43,7 +48,7 @@ class UserController extends BaseController
             $email = $_SESSION['user']->email;
         }
         $path = "/user/" . $email;
-        $this->requestUser($email, $path);
+        $this->requestUserByEmail($email, $path);
         if (isset($_SESSION['user'])) {
             $docs = new DocumentController($this->container);
             $docs->requestDocuments();
@@ -88,6 +93,12 @@ class UserController extends BaseController
     public function notify($request, $response)
     {
         return $this->view->render($response, 'message/add.twig');
+    }
+
+    public function filter($request, $response)
+    {
+        $this->requestUser("/user/" . $request->getParam('prontuario'));
+
     }
 
 }

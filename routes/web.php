@@ -43,6 +43,7 @@ $app->group('/users', function () {
     $this->get('/{email}/attachments', UserController::class . ':requestUserAttachments')->setName('user.download');
     $this->get('/{email}/delete', UserController::class . ':delete')->setName('user.delete');
     $this->get('/{user_id}/notify', UserController::class . ':notify')->setName('user.notify');
+    $this->get('/filter/user', UserController::class . ':filter')->setName('user.filter');
 });
 
 $app->group('/notification', function () {

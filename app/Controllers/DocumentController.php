@@ -88,7 +88,7 @@ class DocumentController extends BaseController
         $isFileAttached = v::notBlank()->validate(json_decode($filename)->file);
 
         $requestUser = new UserController($this->container);
-        $requestUser->requestUser($_SESSION['email'], null);
+        $requestUser->requestUserByEmail($_SESSION['email'], null);
         $user = $_SESSION['user'];
         $type = ($_POST['type']);
 

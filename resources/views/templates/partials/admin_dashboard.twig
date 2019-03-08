@@ -10,9 +10,7 @@
                 <input type="text" class="form-control bg-light border-0 small" placeholder="Procurar por prontuário..."
                        aria-label="Search" aria-describedby="basic-addon2">
                 <div class="input-group-append">
-                    <button class="btn btn-primary" type="button">
-                        <i class="fas fa-search fa-sm">Achar!</i>
-                    </button>
+                    <a class=" text-center btn btn-primary btn-sm" href="{{ path_for('user.filter') }}">Achar!</a>
                 </div>
             </div>
         </form>
