@@ -85,6 +85,7 @@ abstract class BaseController
 
     public function tokenGetRequest($path)
     {
+
         $credentials = BaseMiddleware::getToken();
         try {
             $this->api_response = $this->client->get(
@@ -100,7 +101,6 @@ abstract class BaseController
         } catch (BadResponseException $response_exception) {
             $this->api_response = $response_exception;
         }
-
         return $this->api_response;
     }
 

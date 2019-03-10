@@ -18,6 +18,7 @@ class UserController extends BaseController
     public function requestUser($path)
     {
         $api_request = $this->tokenGetRequest($path);
+
         if (method_exists($api_request, 'getCode')) {
             $result = $api_request;
             $result_code = $result->getCode();
@@ -34,8 +35,10 @@ class UserController extends BaseController
                 $_SESSION['user'] = $user;
             }
         } else if ($result_code == 500) {
+            unset($_SESSION['user']);
             $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
         } else if ($result_code == 401) {
+            unset($_SESSION['user']);
             $_SESSION['result_error'] = "Não autorizado";
         }
     }
@@ -71,7 +74,6 @@ class UserController extends BaseController
             $result_code = json_decode($result)->code;
         }
 
-
         if ($result_code == 204) {
             if (property_exists(json_decode($result), 'users')) {
                 $users = json_decode($result)->users;
@@ -97,8 +99,8 @@ class UserController extends BaseController
 
     public function filter($request, $response)
     {
-        $this->requestUser("/user/" . $request->getParam('prontuario'));
-
+        $this->requestUser("/user/filter/" . $request->getParam('prontuario'));
+        return $this->view->render($response, 'user/filter.twig');
     }
 
 }

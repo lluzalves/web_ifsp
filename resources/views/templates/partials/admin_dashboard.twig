@@ -5,18 +5,15 @@
             <i class="fa fa-bars"></i>
         </button>
 
-        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" action="{{ path_for('user.filter') }}" method="post" name="search">
             <div class="input-group">
-                <input type="text" class="form-control bg-light border-0 small" placeholder="Procurar por prontuário..."
+                <input type="text" class="form-control bg-light border-0 small" name="prontuario" id="prontuario" placeholder="Procurar por prontuário..."
                        aria-label="Search" aria-describedby="basic-addon2">
-                <div class="input-group-append">
-                    <a class=" text-center btn btn-primary btn-sm" href="{{ path_for('user.filter') }}">Achar!</a>
-                </div>
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search fa-sm">Achar!</i>
+                </button>
             </div>
         </form>
-
-        </ul>
-
     </nav>
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -25,7 +22,6 @@
 
     <div class="carousel slide">
         <div class="carousel-inner">
-            {{ anyUser }}
             <div class="row">
                 {% if users|length < 1 %}
                     <div class="col-xl-3 col-md-6 mb-4">
