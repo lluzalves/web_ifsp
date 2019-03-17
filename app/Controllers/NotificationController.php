@@ -23,7 +23,7 @@ class NotificationController extends BaseController
             $result_code = json_decode($result)->code;
         }
 
-        if ($result_code == 204) {
+        if ($result_code == 200) {
             if (property_exists(json_decode($result), 'notifications')) {
                 $notifications = json_decode($result)->notifications;
                 if (count($notifications) > 0) {
@@ -81,7 +81,7 @@ class NotificationController extends BaseController
             $result = $api_request->getMessage()['status'];
         }
 
-        if ($result == 204) {
+        if ($result == 200) {
             return $response->withRedirect($this->router->pathFor('home'));
         } else if ($result == 500) {
             $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";

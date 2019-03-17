@@ -74,7 +74,7 @@ class UserController extends BaseController
             $result_code = json_decode($result)->code;
         }
 
-        if ($result_code == 204) {
+        if ($result_code == 200) {
             if (property_exists(json_decode($result), 'users')) {
                 $users = json_decode($result)->users;
                 if (count($users) > 0) {

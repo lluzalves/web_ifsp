@@ -25,7 +25,7 @@ class DocumentController extends BaseController
             $result = $api_request->getBody()->getContents();
             $result_code = json_decode($result)->code;
         }
-        if ($result_code == 204) {
+        if ($result_code == 200) {
             if (property_exists(json_decode($result), 'documents')) {
                 $documents = json_decode($result)->documents;
                 if (count($documents) > 0) {
@@ -53,7 +53,7 @@ class DocumentController extends BaseController
             $result_code = json_decode($result)->code;
         }
 
-        if ($result_code == 204) {
+        if ($result_code == 200) {
             $document = json_decode($result)->documents[0];
             if ($document != null) {
                 $_SESSION['anyDocuments'] = true;
@@ -260,7 +260,7 @@ class DocumentController extends BaseController
                 $result = $api_request->getMessage()['status'];
             }
 
-            if ($result == 204) {
+            if ($result == 200) {
                 $user_controller = new UserController($this->container);
                 return $user_controller->requestUserDetails($response,$response,$args);
             } else if ($result == 500) {
