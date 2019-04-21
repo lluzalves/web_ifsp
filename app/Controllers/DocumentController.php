@@ -183,7 +183,7 @@ class DocumentController extends BaseController
         } else if ($result == 401) {
             $_SESSION['result_error'] = "Não autorizado";
         }
-        return $response->withRedirect($this->router->pathFor('document.add'));
+          return $response->withRedirect($this->router->pathFor('document.add'));
     }
 
     public function delete($request, $response, $args)
@@ -208,7 +208,9 @@ class DocumentController extends BaseController
     public function updateSessionDocument($request, $response, $args)
     {
         foreach ($_SESSION['documents'] as $document) {
-            if ($document->id = $args['document_id']) {
+
+            if ($document->id == $args['document_id']) {
+
                 $_SESSION['document'] = $document;
                 $_SESSION['user_id'] = $document->user_id;
                 $this->container->view->getEnvironment()->addGlobal('document', $document);
