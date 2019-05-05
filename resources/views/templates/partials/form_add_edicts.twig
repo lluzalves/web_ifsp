@@ -1,0 +1,112 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 d- d-md-block bg-light sidebar">
+            <div class="myform form col-md-16">
+                <div class="logo mb-3">
+                    <div class="col-md-12 text-center">
+                        {% if edict %}
+                            <h1>Editar</h1>
+                        {% else %}
+                            <h1>Adicionar</h1>
+                        {% endif %}
+                    </div>
+                </div>
+                <form action="{{ path_for('edict.add') }}" name="addDocument" method="post"
+                      enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label>Elegibilidade</label>
+                        <select name="type" class="form-control">
+                            <option {% if (edict.type == 'Aluno') or (document == null) %}
+                            selected
+                                    {% endif %}>
+                                Professor
+                            </option>
+                            <option{% if edict.type == 'Professor' %}
+                            selected
+                                    {% endif %}>Comunidade
+                            </option>
+                            <option{% if edict.type == 'Comunidade' %}
+                            selected
+                                    {% endif %}>Funcionários em geral
+                            </option>
+                            <option{% if edict.type == 'Funcionários em geral' %}
+                            selected
+                                    {% endif %}>Todos
+                            </option>
+                            <option{% if edict.type == 'Todos' %}
+                            selected
+                                    {% endif %}>Alunos
+                            </option>
+                            <option{% if edict.type == 'Alunos' %}
+                            selected
+                                    {% endif %}>Carteira de Trabalho
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group  {{ errors.title }} ? 'has-error' : '' }}">
+                        <label>Título</label>
+                        <input type="text" name="title" class="form-control" id="description"
+                               placeholder="Titulo do edital" value="{{ edict.title }}">
+                        {% if errors.description %}
+                            <span class="help-block" style="color:crimson">Esse campo não pode ser vazio</span>
+                        {% endif %}
+                    </div>
+                    <div class="form-group  {{ errors.description }} ? 'has-error' : '' }}">
+                        <label>Descrição</label>
+                        <input type="text" name="description" class="form-control" id="description"
+                               placeholder="Informações sobre  o edital" value="{{ edict.description }}">
+                        {% if errors.description %}
+                            <span class="help-block"
+                                  style="color:crimson">Esse campo não pode ser vazio</span>
+                        {% endif %}
+                    </div>
+                    <div class="form-group  {{ errors.description }} ? 'has-error' : '' }}">
+                        <label>Data de abertura</label>
+                        <input type="date" name="startdate" class="form-control" id="description"
+                               placeholder="Data de abertura do edital" value="{{ edict.startdate }}">
+                        {% if errors.description %}
+                            <span class="help-block"
+                                  style="color:crimson">Esse campo não pode ser vazio</span>
+                        {% endif %}
+                    </div>
+                    <div class="form-group  {{ errors.description }} ? 'has-error' : '' }}">
+                        <label>Data de fechamento</label>
+                        <input type="date" name="enddate" class="form-control" id="description"
+                               placeholder="Data de fechamento do edital" value="{{ edict.enddate }}">
+                        {% if errors.description %}
+                            <span class="help-block"
+                                  style="color:crimson">Esse campo não pode ser vazio</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group  {{ errors.file }}? 'has-error' : '' }}">
+                        <label>Arquivo PDF</label>
+                        <input type="file" name="file" id="file" accept="application/pdf"
+                               placeholder="Insira um arquivo">
+                        {% if file == null %}
+                            <span class="help-block" style="color:crimson"><p>Por favor insira um arquivo</p></span>
+                        {% endif %}
+                    </div>
+
+
+                    <div class="col-md-12 text-center mb-3">
+                        <button type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Adicionar</button>
+                    </div>
+
+                    <div class="col-md-12  has-error">
+                        <div class="form-group">
+                            <p class="text-center" style="color:crimson"><a id="error">{{ result_error }}</a></p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-8 mx-auto">
+            <div class="col-md-15">
+                <img src="https://i.imgur.com/W3oDn0o.jpg" height="720" width="920"/>
+            </div>
+        </div>
+    </div>
+</div>
+

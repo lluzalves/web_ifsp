@@ -208,7 +208,6 @@ class DocumentController extends BaseController
     public function updateSessionDocument($request, $response, $args)
     {
         foreach ($_SESSION['documents'] as $document) {
-
             if ($document->id == $args['document_id']) {
 
                 $_SESSION['document'] = $document;

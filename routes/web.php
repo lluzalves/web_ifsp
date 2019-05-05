@@ -5,6 +5,7 @@ use App\Controllers\HomeController;
 use \App\Controllers\AuthController;
 use App\Controllers\NotificationController;
 use App\Controllers\UserController;
+use App\Controllers\EdictController;
 
 $app->group('/', function () {
     $this->get('', HomeController::class . ':index')->setName('home');
@@ -44,6 +45,12 @@ $app->group('/users', function () {
     $this->get('/{email}/delete', UserController::class . ':delete')->setName('user.delete');
     $this->get('/{user_id}/notify', UserController::class . ':notify')->setName('user.notify');
     $this->post('/filter/user', UserController::class . ':filter')->setName('user.filter');
+});
+
+$app->group('/edict', function () {
+    $this->get('', EdictController::class . ':showAddForm')->setName('edict.form');
+    $this->post('', EdictController::class . ':addEdict')->setName('edict.add');
+
 });
 
 $app->group('/notification', function () {
