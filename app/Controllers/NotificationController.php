@@ -73,7 +73,7 @@ class NotificationController extends BaseController
             ]
         ];
 
-        $api_request = $this->postTokenRequest($path, $message);
+        $api_request = $this->makePostRequestWithToken($path, $message);
         if (method_exists($api_request, 'getBody')) {
             $api_response = json_decode($api_request->getBody()->getContents());
             $result = $api_response->code;

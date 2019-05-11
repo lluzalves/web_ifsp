@@ -171,7 +171,7 @@ abstract class BaseController
         return $this->api_response;
     }
 
-    public function postTokenRequest($path, $data)
+    public function makePostRequestWithToken($path, $data)
     {
         $credentials = BaseMiddleware::getToken();
         try {
@@ -253,6 +253,8 @@ abstract class BaseController
         } catch (BadResponseException $response_exception) {
             $this->api_response = $response_exception;
         }
+        var_dump($this->api_response->getResponse()->getBody()->read(100000));
+        exit();
         return $this->api_response;
 
     }

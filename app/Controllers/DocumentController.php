@@ -255,7 +255,7 @@ class DocumentController extends BaseController
             ];
 
 
-            $api_request = $this->postTokenRequest($path, $body);
+            $api_request = $this->makePostRequestWithToken($path, $body);
 
             if (method_exists($api_request, 'getBody')) {
                 $api_response = json_decode($api_request->getBody()->getContents());

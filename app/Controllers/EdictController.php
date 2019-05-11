@@ -68,7 +68,7 @@ class EdictController extends BaseController
         $path = "/edict/add";
         $body = array($roles, $title, $description, $starts_at, $end_at, $created_by,);
 
-        $api_request = $this->makePostRequestWithParams($path, $body);
+        $api_request = $this->makePostRequestWithToken($path, $body);
         if (method_exists($api_request, 'getCode')) {
             $result = $api_request->getCode();
         } else {
