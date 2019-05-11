@@ -177,13 +177,17 @@ class DocumentController extends BaseController
         if ($result == 200) {
             unset($_SESSION['user_id']);
             unset($_SESSION['document']);
-            return $response->withRedirect($this->router->pathFor('home'));
+            if ($_SESSION['user']->role = 'admin') {
+                return $response->withRedirect("/web_ifsp/public/users/" . $_SESSION['current_detailed_user_email']);
+            } else {
+                return $response->withRedirect($this->router->pathFor('home'));
+            }
         } else if ($result == 500) {
             $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
         } else if ($result == 401) {
             $_SESSION['result_error'] = "Não autorizado";
         }
-          return $response->withRedirect($this->router->pathFor('document.add'));
+        return $response->withRedirect($this->router->pathFor('document.add'));
     }
 
     public function delete($request, $response, $args)
@@ -195,9 +199,8 @@ class DocumentController extends BaseController
         } else {
             $result = 200;
         }
-
         if ($result == 200) {
-            return $response->withRedirect($this->router->pathFor('home'));
+            return $response->withRedirect("/web_ifsp/public/users/" . $_SESSION['current_detailed_user_email']);
         } else if ($result == 500) {
             $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
         } else if ($result == 401) {
@@ -257,13 +260,13 @@ class DocumentController extends BaseController
             if (method_exists($api_request, 'getBody')) {
                 $api_response = json_decode($api_request->getBody()->getContents());
                 $result = $api_response->code;
-            } else {;
+            } else {
+                ;
                 $result = $api_request->getMessage()['status'];
             }
 
             if ($result == 200) {
-                $user_controller = new UserController($this->container);
-                return $user_controller->requestUserDetails($response,$response,$args);
+                return $response->withRedirect("/web_ifsp/public/users/" . $_SESSION['current_detailed_user_email']);
             } else if ($result == 500) {
                 $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
             } else if ($result == 401) {

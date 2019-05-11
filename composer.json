@@ -4,7 +4,8 @@
         "slim/twig-view": "^2.4",
         "guzzlehttp/guzzle": "^6.3",
         "respect/validation": "^1.1",
-        "phpmailer/phpmailer": "^6.0"
+        "phpmailer/phpmailer": "^6.0",
+      "ext-json": "*"
     },
     "autoload": {
         "psr-4": {

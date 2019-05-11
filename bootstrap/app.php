@@ -1,10 +1,22 @@
 <?php
 
+use App\Controllers\AuthController;
+use App\Controllers\DocumentController;
+use App\Controllers\HomeController;
+use App\Controllers\NotificationController;
+use App\Controllers\UserController;
 use App\Middleware\BaseMiddleware;
+use App\Middleware\ValidationErrors;
+use  App\Validation\Validator;
+use Slim\App;
+use Slim\Http\Environment;
+use Slim\Http\Uri;
+use Slim\Views\Twig;
+use Slim\Views\TwigExtension;
 
 session_start();
 require __DIR__ . '/../vendor/autoload.php';
-$app = new \Slim\App([
+$app = new App([
     'settings' => [
         'displayErrorDetails' => true,
     ]
@@ -21,41 +33,41 @@ $app->add(function ($request, $response, $next) {
 //register component on container
 $container ['view'] = function ($container) {
 
-    $view = new \Slim\Views\Twig(__DIR__ . '/../resources/views', [
+    $view = new Twig(__DIR__ . '/../resources/views', [
         'cache' => false,
     ]);
     //instantiate and add Slim specific extension
     $router = $container->get('router');
-    $uri = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
-    $view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
+    $uri = Uri::createFromEnvironment(new Environment($_SERVER));
+    $view->addExtension(new TwigExtension($router, $uri));
     return $view;
 };
 
 $container['validator'] = function ($container) {
-    return new App\Validation\Validator;
+    return new Validator();
 };
 
 $container['HomeController'] = function ($container) {
-    return new \App\Controllers\HomeController($container);
+    return new HomeController($container);
 };
 
 $container['AuthController'] = function ($container) {
-    return new \App\Controllers\AuthController($container);
+    return new AuthController($container);
 };
 
 $container['DocumentController'] = function ($container) {
-    return new \App\Controllers\DocumentController($container);
+    return new DocumentController($container);
 };
 
 $container['UserController'] = function ($container) {
-    return new \App\Controllers\UserController($container);
+    return new UserController($container);
 };
 
 $container['NotificationController'] = function ($container) {
-    return new \App\Controllers\NotificationController($container);
+    return new NotificationController($container);
 };
 
-$app->add(new \App\Middleware\BaseMiddleware($container));
-$app->add(new \App\Middleware\ValidationErrors($container));
+$app->add(new BaseMiddleware($container));
+$app->add(new ValidationErrors($container));
 
 require __DIR__ . '/../routes/web.php';

@@ -238,9 +238,8 @@ abstract class BaseController
     }
 
 
-    public function requestSignInPostWithParams($path, $body)
+    public function makePostRequestWithParams($path, $body)
     {
-
         try {
             $this->api_response = $this->client->post(
                 $this->api_address . $path, [
@@ -254,7 +253,6 @@ abstract class BaseController
         } catch (BadResponseException $response_exception) {
             $this->api_response = $response_exception;
         }
-
         return $this->api_response;
 
     }

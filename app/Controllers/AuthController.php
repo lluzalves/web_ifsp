@@ -67,7 +67,7 @@ class AuthController extends BaseController
         $body = array($name,$password,$email,$profile_icon,$prontuario,$role);
 
         $path = "/register";
-        $api_request = $this->requestSignInPostWithParams($path, $body);
+        $api_request = $this->makePostRequestWithParams($path, $body);
         if (method_exists($api_request, 'getCode')) {
             $result = $api_request->getCode();
         } else {

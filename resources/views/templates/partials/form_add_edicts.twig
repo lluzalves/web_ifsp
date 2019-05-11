@@ -4,49 +4,24 @@
             <div class="myform form col-md-16">
                 <div class="logo mb-3">
                     <div class="col-md-12 text-center">
-                        {% if edict %}
-                            <h1>Editar</h1>
-                        {% else %}
-                            <h1>Adicionar</h1>
-                        {% endif %}
+                        <h1>Adicionar</h1>
                     </div>
                 </div>
-                <form action="{{ path_for('edict.add') }}" name="addDocument" method="post"
+                <form action="{{ path_for('edict.add') }}" name="addEdict" method="post"
                       enctype="multipart/form-data">
                     <div class="form-group">
                         <label>Elegibilidade</label>
-                        <select name="type" class="form-control">
-                            <option {% if (edict.type == 'Aluno') or (document == null) %}
-                            selected
-                                    {% endif %}>
-                                Professor
-                            </option>
-                            <option{% if edict.type == 'Professor' %}
-                            selected
-                                    {% endif %}>Comunidade
-                            </option>
-                            <option{% if edict.type == 'Comunidade' %}
-                            selected
-                                    {% endif %}>Funcionários em geral
-                            </option>
-                            <option{% if edict.type == 'Funcionários em geral' %}
-                            selected
-                                    {% endif %}>Todos
-                            </option>
-                            <option{% if edict.type == 'Todos' %}
-                            selected
-                                    {% endif %}>Alunos
-                            </option>
-                            <option{% if edict.type == 'Alunos' %}
-                            selected
-                                    {% endif %}>Carteira de Trabalho
-                            </option>
+                        <select name="roles" class="form-control" id="roles">
+                            <option>Aluno</option>
+                            <option>Professor</option>
+                            <option>Comunidade</option>
+
                         </select>
                     </div>
 
                     <div class="form-group  {{ errors.title }} ? 'has-error' : '' }}">
                         <label>Título</label>
-                        <input type="text" name="title" class="form-control" id="description"
+                        <input type="text" name="title" class="form-control" id="title"
                                placeholder="Titulo do edital" value="{{ edict.title }}">
                         {% if errors.description %}
                             <span class="help-block" style="color:crimson">Esse campo não pode ser vazio</span>
@@ -63,7 +38,7 @@
                     </div>
                     <div class="form-group  {{ errors.description }} ? 'has-error' : '' }}">
                         <label>Data de abertura</label>
-                        <input type="date" name="startdate" class="form-control" id="description"
+                        <input type="date" name="starts_at" class="form-control" id="starts_at"
                                placeholder="Data de abertura do edital" value="{{ edict.startdate }}">
                         {% if errors.description %}
                             <span class="help-block"
@@ -72,20 +47,11 @@
                     </div>
                     <div class="form-group  {{ errors.description }} ? 'has-error' : '' }}">
                         <label>Data de fechamento</label>
-                        <input type="date" name="enddate" class="form-control" id="description"
+                        <input type="date" name="end_at" class="form-control" id="end_at"
                                placeholder="Data de fechamento do edital" value="{{ edict.enddate }}">
                         {% if errors.description %}
                             <span class="help-block"
                                   style="color:crimson">Esse campo não pode ser vazio</span>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group  {{ errors.file }}? 'has-error' : '' }}">
-                        <label>Arquivo PDF</label>
-                        <input type="file" name="file" id="file" accept="application/pdf"
-                               placeholder="Insira um arquivo">
-                        {% if file == null %}
-                            <span class="help-block" style="color:crimson"><p>Por favor insira um arquivo</p></span>
                         {% endif %}
                     </div>
 

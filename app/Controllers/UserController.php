@@ -47,6 +47,7 @@ class UserController extends BaseController
     {
         if (isset($args['email'])) {
             $email = $args['email'];
+            $_SESSION['current_detailed_user_email'] = $email;
         } else {
             $email = $_SESSION['user']->email;
         }
