@@ -119,7 +119,7 @@
                     <a class="text-center btn btn-success btn-sm active"
                        href="{{ path_for('document.validate', {'document_id' : document.id}) }}">Validar</a>
                 {% else %}
-                    <a class="text-center btn btn-secondary btn-sm disable"
+                    <a class="text-center btn btn-secondary btn-sm disabled"
                        href="">Validado</a>
                 {% endif %}
             </td>
@@ -133,7 +133,7 @@
                    href="{{ path_for('delete', { 'document_id' : document.id}) }}">Apagar</a>
             </td>
         {% else %}
-            <a class="text-center btn btn-secondary btn-sm disable"
+            <a class="text-center btn btn-secondary btn-sm disabled"
                href="">Apagar</a></td>
             {% endif %}
 

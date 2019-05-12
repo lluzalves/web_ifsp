@@ -61,9 +61,9 @@ class UserController extends BaseController
     }
 
 
-    public function requestUsers()
+    public function requestUsers($request, $response, $args)
     {
-        $path = "/user/all";
+        $path = "/user/all/edict/" . $args['edict_id'];
 
         $api_request = $this->tokenGetRequest($path);
 
@@ -75,16 +75,18 @@ class UserController extends BaseController
             $result_code = json_decode($result)->code;
         }
 
-        if ($result_code == 200) {
+         if ($result_code == 200) {
             if (property_exists(json_decode($result), 'users')) {
                 $users = json_decode($result)->users;
                 if (count($users) > 0) {
                     $_SESSION['anyUser'] = true;
                     $_SESSION['users'] = $users;
                     $this->container->view->getEnvironment()->addGlobal('users', $_SESSION['users']);
+                    return $this->view->render($response, 'user/all.twig');
                 }
             } else {
                 $_SESSION['anyUser'] = false;
+                return $this->view->render($response, 'user/all.twig');
             }
         } else if ($result_code == 500) {
             $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";

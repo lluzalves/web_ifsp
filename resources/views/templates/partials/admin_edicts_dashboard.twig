@@ -1,0 +1,53 @@
+<div class="container-fluid">
+    <nav class="navbar navbar-expand navbar-light bg-white center topbar mb-3 static-top shadow">
+
+        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+        </button>
+
+        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" action="{{ path_for('user.filter') }}" method="post" name="search">
+            <div class="input-group">
+                <input type="text" class="form-control bg-light border-0 small" name="edital" id="edital" placeholder="Procurar por titulo..."
+                       aria-label="Search" aria-describedby="basic-addon2">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search fa-sm">Achar!</i>
+                </button>
+            </div>
+        </form>
+    </nav>
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Editais recentes</h1>
+    </div>
+
+    <div class="carousel slide">
+        <div class="carousel-inner">
+            <div class="row">
+                {% if edicts|length < 1 %}
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-body">
+                                Opa, por enquanto ainda não foi adicionado nenhum edital.
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    {% for edict in edicts %}
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <b>{{ edict.title }}</b>
+                                    <p><b>Data de abertura:</b> {{ edict.starts_at }}</p>
+                                    <p><b>Data de finalização:</b> {{ edict.end_at }}</p>
+                                    <a class="text-center btn btn-primary btn-sm active" href="{{ path_for('edict.details', { 'edict_id' : edict.id}) }}">+ Detalhes</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+

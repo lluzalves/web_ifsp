@@ -18,23 +18,23 @@ class EdictController extends BaseController
         $requestUser = new UserController($this->container);
         $requestUser->requestUserByEmail($_SESSION['email'], null);
         $user = $_SESSION['user'];
-        $roles = ($_POST['roles']);
+        $type = ($_POST['type']);
         $validation = $this->validator->validate($request, [
             'description' => v::notEmpty(),
             'title' => v::notEmpty(),
             'starts_at' => v::notEmpty(),
             'end_at' => v::notEmpty(),
-            'roles' => v::notEmpty(),
+            'type' => v::notEmpty(),
         ]);
 
         if ($validation->failed()) {
             return $response->withRedirect($this->router->pathFor('edict.add'));
         }
 
-        $roles = [
+        $type = [
             'Content-type' => 'multipart/form-data',
-            'name' => 'roles',
-            'contents' => $roles,
+            'name' => 'type',
+            'contents' => $type,
         ];
 
         $created_by = [
@@ -66,7 +66,7 @@ class EdictController extends BaseController
         ];
 
         $path = "/edict/add";
-        $body = array($roles, $title, $description, $starts_at, $end_at, $created_by,);
+        $body = array($type, $title, $description, $starts_at, $end_at, $created_by,);
 
         $api_request = $this->makePostRequestWithToken($path, $body);
         if (method_exists($api_request, 'getCode')) {
@@ -83,5 +83,72 @@ class EdictController extends BaseController
             $_SESSION['result_error'] = "Não autorizado";
         }
         return $response->withRedirect($this->router->pathFor('edict.add'));
+    }
+
+
+    public function requestEdicts()
+    {
+
+        if($_SESSION['role'] === 'aluno') {
+            $path = "/edict/user/all";
+        }else{
+            $path = "/edict/all";
+        }
+
+        $api_request = $this->tokenGetRequest($path);
+
+        if (method_exists($api_request, 'getCode')) {
+            $result = $api_request;
+            $result_code = $result->getCode();
+        } else {
+            $result = $api_request->getBody()->getContents();
+            $result_code = json_decode($result)->code;
+        }
+
+        if ($result_code == 200) {
+            if (property_exists(json_decode($result), 'edicts')) {
+                $edicts = json_decode($result)->edicts;
+                if (count($edicts) > 0) {
+                    $_SESSION['anyEdict'] = true;
+                    $_SESSION['edicts'] = $edicts;
+                    $this->container->view->getEnvironment()->addGlobal('edicts', $_SESSION['edicts']);
+                }
+            } else {
+                $_SESSION['anyEdict'] = false;
+            }
+        } else if ($result_code == 500) {
+            $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
+        } else if ($result_code == 401) {
+            $_SESSION['result_error'] = "Não autorizado";
+        }
+    }
+
+
+    public function requestEdictDetails($request, $response, $args)
+    {
+        $path = "/edict/details/" . $args['edict_id'];
+        $api_request = $this->tokenGetRequest($path);
+
+        if (method_exists($api_request, 'getCode')) {
+            $result = $api_request;
+            $result_code = $result->getCode();
+        } else {
+            $result = $api_request->getBody()->getContents();
+            $result_code = json_decode($result)->code;
+        }
+
+        if ($result_code == 200) {
+            $edict = json_decode($result)->edict[0];
+            if ($edict != null) {
+                $_SESSION['edict'] = $edict;
+            }
+        } else if ($result_code == 500) {
+            $_SESSION['result_error'] = "Requisição inválida, tente novamente mais tarde";
+        } else if ($result_code == 401) {
+            $_SESSION['result_error'] = "Não autorizado";
+        }
+
+        $this->container->view->getEnvironment()->addGlobal('edict', $_SESSION['edict']);
+        return $this->view->render($response, 'edicts/details.twig');
     }
 }

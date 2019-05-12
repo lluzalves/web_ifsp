@@ -126,6 +126,12 @@ class DocumentController extends BaseController
 
                 [
                     'Content-type' => 'multipart/form-data',
+                    'name' => 'edict_id',
+                    'contents' =>substr($request->getParam('edict'),0,2),
+                ],
+
+                [
+                    'Content-type' => 'multipart/form-data',
                     'name' => 'type',
                     'contents' => $type,
                 ]
@@ -146,6 +152,12 @@ class DocumentController extends BaseController
 
                 [
                     'Content-type' => 'multipart/form-data',
+                    'name' => 'edict_id',
+                    'contents' =>substr($request->getParam('edict'),0,2),
+                ],
+
+                [
+                    'Content-type' => 'multipart/form-data',
                     'name' => 'type',
                     'contents' => $type,
                 ]
@@ -161,6 +173,12 @@ class DocumentController extends BaseController
 
                 [
                     'Content-type' => 'multipart/form-data',
+                    'name' => 'edict_id',
+                    'contents' =>substr($request->getParam('edict'),0,2),
+                ],
+
+                [
+                    'Content-type' => 'multipart/form-data',
                     'name' => 'type',
                     'contents' => $type,
                 ]
@@ -168,6 +186,8 @@ class DocumentController extends BaseController
             $path = "/documents";
         }
         $api_request = $this->multiPartTokenRequest($path, $body, $user, $file);
+
+
         if (method_exists($api_request, 'getCode')) {
             $result = $api_request->getCode();
         } else {
@@ -177,7 +197,8 @@ class DocumentController extends BaseController
         if ($result == 200) {
             unset($_SESSION['user_id']);
             unset($_SESSION['document']);
-            if ($_SESSION['user']->role = 'admin') {
+
+            if ($user->role == 'admin') {
                 return $response->withRedirect("/web_ifsp/public/users/" . $_SESSION['current_detailed_user_email']);
             } else {
                 return $response->withRedirect($this->router->pathFor('home'));
@@ -187,7 +208,7 @@ class DocumentController extends BaseController
         } else if ($result == 401) {
             $_SESSION['result_error'] = "Não autorizado";
         }
-        return $response->withRedirect($this->router->pathFor('document.add'));
+        return $response->withRedirect("web_ifsp/public/");
     }
 
     public function delete($request, $response, $args)
@@ -230,6 +251,8 @@ class DocumentController extends BaseController
 
     public function showAddForm($request, $response)
     {
+        $edict = new EdictController($this->container);
+        $edict->requestEdicts();
         return $this->view->render($response, 'document/add.twig');
     }
 

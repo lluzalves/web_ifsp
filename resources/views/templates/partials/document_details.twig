@@ -18,7 +18,7 @@
         <div class="col-xl-3 col-md-6 mb-4">
             <a class="text-center btn btn-primary btn-sm active"
                href="{{ path_for('document.download', { 'document_id' : document.id}) }}">Download Anexo</a>
-            {% if document.validated == 1 %}
+            {% if document.validated == 0 %}
                 <a class="text-center btn btn-warning btn-sm disabled">Editar</a>
                 <a class="text-center btn btn-danger btn-sm disabled">Apagar</a>
                 {% else %}

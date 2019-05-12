@@ -39,7 +39,7 @@ $app->group('/document', function () {
 });
 
 $app->group('/users', function () {
-    $this->get('', UserController::class . ':requestUsers')->setName('users.all');
+    $this->get('/all/edict/{edict_id}', UserController::class . ':requestUsers')->setName('users.all');
     $this->get('/{email}', UserController::class . ':requestUserDetails')->setName('user.details');
     $this->get('/{email}/attachments', UserController::class . ':requestUserAttachments')->setName('user.download');
     $this->get('/{email}/delete', UserController::class . ':delete')->setName('user.delete');
@@ -50,7 +50,8 @@ $app->group('/users', function () {
 $app->group('/edict', function () {
     $this->get('', EdictController::class . ':showAddForm')->setName('edict.form');
     $this->post('', EdictController::class . ':addEdict')->setName('edict.add');
-
+    $this->get('/all', EdictController::class . ':requestEdicts')->setName('edicts.all');
+    $this->get('/details/{edict_id}', EdictController::class . ':requestEdictDetails')->setName('edict.details');
 });
 
 $app->group('/notification', function () {
