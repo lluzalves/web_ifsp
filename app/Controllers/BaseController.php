@@ -146,7 +146,6 @@ abstract class BaseController
         } catch (BadResponseException $response_exception) {
             $this->api_response = $response_exception;
         }
-
         return $this->api_response;
     }
 
@@ -253,8 +252,6 @@ abstract class BaseController
         } catch (BadResponseException $response_exception) {
             $this->api_response = $response_exception;
         }
-        var_dump($this->api_response->getResponse()->getBody()->read(100000));
-        exit();
         return $this->api_response;
 
     }
